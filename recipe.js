@@ -67,8 +67,30 @@ const steps = [
     [],
     [['김진옥 레시피 · 채반에서 1시간', 'https://www.10000recipe.com/recipe/6967727'], ['절임배추 40kg 조리 예시 · 물받이와 채반', 'https://m.10000recipe.com/recipe/7065985']],
   ],
-  ['찹쌀풀 쑤기', '차가운 육수에 찹쌀가루를 풀고, 중불에서 저으며 3~5분 끓입니다. 완전히 식혀 둡니다.', groups[1][1]],
-  ['홍갓과 쪽파 손질', '씻은 홍갓과 쪽파를 2cm 길이로 썹니다. 홍갓은 줄기 사이 흙을 헹군 뒤 물기를 뺍니다.', ['greens', 'scallions']],
+  [
+    '찹쌀풀 쑤기',
+    '아래에 표시된 찹쌀풀용 육수와 찹쌀가루를 사용합니다.',
+    groups[1][1],
+    [['김진옥 원본 레시피 · 찹쌀풀', 'https://www.10000recipe.com/recipe/7037475']],
+    [
+      '불을 켜기 전에 식힌 육수에 찹쌀가루를 넣고 거품기로 덩어리 없이 풉니다.',
+      '중불에서 약 3~5분 저으며 끓입니다. 냄비 바닥과 가장자리까지 훑어 눌어붙지 않게 하고, 끓어오르면 불을 조금 낮춥니다.',
+      '묽은 죽처럼 걸쭉해지고 주걱에 얇게 묻으면 불을 끕니다. 식으면서 더 되직해집니다.',
+      '양념에 섞기 전에 완전히 식힙니다. 양이 많으면 냄비 바깥을 찬물에 받쳐 저어 식히면 시간을 줄일 수 있습니다.',
+    ],
+  ],
+  [
+    '홍갓과 쪽파 손질',
+    '홍갓과 쪽파는 따로 씻고, 잎과 줄기를 약 2cm 길이로 썹니다.',
+    ['greens', 'scallions'],
+    [['김진옥 원본 레시피 · 홍갓과 쪽파', 'https://www.10000recipe.com/recipe/7037475'], ['새미네부엌 · 쪽파 손질법', 'https://semie.cooking/recipe-lab/archive/how-to-clean-green-onion']],
+    [
+      '홍갓은 묶음을 풀고 뿌리와 시든 잎을 떼어냅니다. 줄기가 갈라지는 밑동을 벌려 흙을 털고, 흐르는 물에 잎 뒷면과 줄기 사이를 씻습니다.',
+      '홍갓을 약 2cm로 썬 뒤 한 번 더 헹구고 채반에 받칩니다. 밑동 가까운 줄기 사이에 흙이 남았는지 확인합니다.',
+      '쪽파는 뿌리 끝을 자르고 누런 잎과 흙이 낀 겉껍질을 벗깁니다. 흰 밑동부터 물에 헹군 다음 초록 잎도 씻습니다.',
+      '쪽파는 채반에서 겉물이 빠진 뒤 흰 부분과 초록 부분을 함께 약 2cm로 썹니다. 물기 뺀 홍갓과 쪽파는 김칫소에 넣을 때까지 따로 둡니다.',
+    ],
+  ],
   ['무 채 썰기', '채 썰기용 무를 씻어 반으로 나눈 다음 채를 썹니다.', ['sliced']],
   ['갈 재료 썰기', '배와 사과, 대파 흰 부분, 무, 양파를 믹서기에 들어갈 크기로 자릅니다.', ['pear', 'apple', 'leek', 'blended', 'onion']],
   ['믹서기로 갈기', '썰어 둔 재료에 생새우, 새우젓, 육수를 넣어 곱게 갑니다.', ['fresh', 'shrimp', 'stock']],
@@ -112,10 +134,11 @@ function currentWeight() {
 }
 
 function renderStep() {
-  const [title, description, ids, sources = []] = steps[stepIndex];
+  const [title, description, ids, sources = [], instructions = []] = steps[stepIndex];
+  const instructionList = instructions.map(line => `<li>${line}</li>`).join('');
   const sourceLinks = sources.map(([label, url]) => `<li><a href="${url}">${label}</a></li>`).join('');
   byId('step-count').textContent = `${stepIndex + 1} / ${steps.length} 단계`;
-  byId('step').innerHTML = `<h3>${title}</h3><p>${description}</p>${renderRows(ids, currentWeight())}${sourceLinks ? `<ul>${sourceLinks}</ul>` : ''}`;
+  byId('step').innerHTML = `<h3>${title}</h3><p>${description}</p>${renderRows(ids, currentWeight())}${instructionList ? `<ol>${instructionList}</ol>` : ''}${sourceLinks ? `<ul>${sourceLinks}</ul>` : ''}`;
   Array.from(byId('step-list').children).forEach((button, index) => {
     button.setAttribute('aria-pressed', index === stepIndex);
   });

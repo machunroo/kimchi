@@ -1,13 +1,14 @@
 :root{color-scheme:light;--ink:#302722;--muted:#655850;--red:#a53827;--paper:#faf6f0;--line:#e8dcd1;font-family:system-ui,"Malgun Gothic",sans-serif;background:var(--paper);color:var(--ink)}
 *{box-sizing:border-box}
+html{scrollbar-gutter:stable}
 body{margin:0}
 main{max-width:1120px;margin:auto;padding:32px clamp(16px,4vw,48px)}
-.hero{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:#782b20;color:#fff8f0;padding:clamp(24px,5vw,54px);border-radius:24px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;background:#782b20;color:#fff8f0;padding:clamp(14px,2.5vw,26px);border-radius:24px}
 .brand{font-weight:700;color:#ffdbbc;margin:0}
-h1{font-size:clamp(2.8rem,8vw,5rem);letter-spacing:-.08em;margin:.12em 0}
+h1{font-size:clamp(1.9rem,5vw,3.25rem);line-height:1.15;letter-spacing:-.08em;margin:.12em 0}
 p{line-height:1.65}
-.hero p:last-child{margin-bottom:0}
-.weight{background:#fff9f4;color:var(--ink);padding:18px 22px;border-radius:16px;width:min(100%,250px)}
+.hero p:last-child{margin:4px 0 0}
+.weight{background:#fff9f4;color:var(--ink);padding:10px 14px;border-radius:12px;width:min(100%,220px)}
 label{font-weight:750}
 .input{display:flex;align-items:center;gap:12px;margin:8px 0}
 input{font:inherit;font-size:1.65rem;font-weight:750;width:100%;min-width:0;padding:6px 10px;border:1px solid #bba89c;border-radius:8px;background:white;color:inherit}
@@ -34,10 +35,14 @@ summary{cursor:pointer;font-weight:700}
 .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 .step-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px;margin-bottom:14px}
 .step-toolbar .actions{margin-top:0}
+.step-toolbar #next{width:8.5rem;padding-inline:8px}
 #step-list{display:flex;flex-wrap:wrap;gap:6px}
 #step-list button{padding-inline:14px}
+#cook{min-height:100svh}
+#step{overflow-anchor:none}
 #step p{margin:0}
 #step dl{margin-top:12px}
 footer{display:flex;flex-wrap:wrap;gap:8px 20px;border-top:1px solid var(--line);padding-top:16px}
 a{color:#823324;text-underline-offset:3px}
 @media(max-width:700px){.hero{border-radius:16px}}
+@media(max-width:540px){.step-toolbar{grid-template-columns:minmax(0,1fr);gap:8px}}

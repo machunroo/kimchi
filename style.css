@@ -32,7 +32,9 @@ dd small{font-weight:400;margin-top:3px}
 details,footer{margin-top:24px;color:var(--muted)}
 summary{cursor:pointer;font-weight:700}
 .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
-#step-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.step-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px;margin-bottom:14px}
+.step-toolbar .actions{margin-top:0}
+#step-list{display:flex;flex-wrap:wrap;gap:6px}
 #step-list button{padding-inline:14px}
 #step p{margin:0}
 #step dl{margin-top:12px}

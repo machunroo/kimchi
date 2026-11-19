@@ -41,9 +41,9 @@ const ingredients = {
   paste: { name: '식힌 찹쌀풀', note: '만든 분량 전부' },
   garlic: { name: '다진 마늘', amount: 400, unit: 'g', key: 'garlic' },
   ginger: { name: '다진 생강', amount: 100, unit: 'g' },
-  fish: { name: '멸치액젓', amount: 800, unit: 'g', key: 'fish', ml: 700 },
+  fish: { name: '멸치액젓', amount: 800, unit: 'g', key: 'fish', ml: 700, showMilliliters: true },
   pepper: { name: '고춧가루', amount: 1100, unit: 'g', key: 'pepper', ml: 1800 },
-  plum: { name: '매실청', amount: 4, unit: '큰술', ml: 60 },
+  plum: { name: '매실청', amount: 4, unit: '큰술', ml: 60, showMilliliters: true },
   salt: { name: '소금 · 마지막 간 조절', amount: 50, unit: 'g', ml: 5 * 15 },
 };
 
@@ -97,10 +97,12 @@ function renderRows(ids, kg) {
     const factor = kg ? multiplier(kg, item.key) : 0;
     const amount = item.note ?? (kg ? amountText(item.amount * factor, item.unit) : '—');
     const showVolume = kg && item.ml;
+    const milliliters = showVolume && item.showMilliliters
+      ? ` · 약 ${amountText(item.ml * factor, 'mL')}` : '';
     const cups = showVolume ? '약 ' + amountText(item.ml * factor / 180, '종이컵') : '';
     const spoons = showVolume && item.unit !== '큰술'
       ? ' · ' + amountText(item.ml * factor / 15, '큰술') : '';
-    return `<div class="row"><dt>${item.name}</dt><dd>${amount}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
+    return `<div class="row"><dt>${item.name}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
   }).join('') + '</dl>';
 }
 

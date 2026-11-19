@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리집 김장 | 김장 레시피</title>
+<link rel="stylesheet" href="./style.css">
+<script defer src="./recipe.js"></script>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 무게를 입력하고, 재료 준비부터 버무리기까지.</p></div>
+    <div class="weight">
+      <label for="weight">절임배추</label>
+      <div class="input"><input id="weight" type="number" min="0.1" step="any" value="20" aria-describedby="weight-status"><span>kg</span></div>
+      <small id="weight-status" aria-live="polite"></small>
+    </div>
+  </header>
+  <nav aria-label="레시피 단계"><button id="prep-tab" aria-pressed="true" aria-controls="prep">준비</button><button id="cook-tab" aria-pressed="false" aria-controls="cook">조리</button></nav>
+  <section id="prep" aria-labelledby="prep-title">
+    <div class="intro"><h2 id="prep-title" tabindex="-1">재료 준비</h2><p>종이컵은 180 mL, 큰술은 15 mL 기준입니다. 부피 계량은 약값입니다.</p></div>
+    <div id="ingredients" class="grid"></div>
+    <details><summary>계량과 환산 기준</summary><p>표에 있는 재료는 첨부 표의 중량별 수치를 구간마다 직선으로 이어 증가율을 구한 뒤, 원본의 20 kg 분량에 적용합니다. 표 범위(20~235 kg) 밖은 가장 가까운 끝값에서 배추 무게에 비례해 환산합니다. 표에 없는 재료는 배추 무게에 비례합니다. 무는 채 써는 양과 갈아 넣는 양에 같은 증가율을 적용합니다.</p><p>원본에 부피나 숟가락 계량이 있는 항목에 종이컵과 큰술을 표시합니다. 무게만 확인되는 항목은 저울로 계량하세요.</p></details>
+    <div class="actions"><button type="button" id="start">조리 시작</button></div>
+  </section>
+  <section id="cook" aria-labelledby="cook-title" hidden>
+    <div class="intro"><h2 id="cook-title" tabindex="-1">조리 순서</h2><p id="step-count"></p></div>
+    <div id="step-list" role="group" aria-label="조리 단계 선택"></div>
+    <article id="step" aria-live="polite"></article>
+    <div class="actions"><button id="prev">이전</button><button id="next">다음</button></div>
+  </section>
+  <footer><a href="https://www.10000recipe.com/recipe/7037475">김진옥요리가좋다 · 원본 레시피</a><a href="https://m.blog.naver.com/notetip/224058717360">중량별 양념 참고표</a></footer>
+</main>
+</body>
+</html>

@@ -2,13 +2,12 @@ const weights = [20, 24, 47, 71, 94, 118, 235];
 const reference = {
   radish: [2.2, 2.7, 5.3, 7.9, 10.5, 13, 26],
   scallions: [1.1, 1.3, 2.6, 4, 5, 6.5, 13],
-  flour: [0.18, 0.21, 0.42, 0.64, 0.85, 1, 2.12],
   shrimp: [0.6, 0.7, 1.4, 2, 2.7, 3.4, 6.8],
   garlic: [0.85, 1, 2, 3, 4, 5, 10],
   fish: [0.85, 1, 2, 3, 4, 5, 10],
   pepper: [1.3, 1.5, 3, 4.5, 6, 7.5, 15],
+  sugar: [0.3, 0.35, 0.7, 1, 1.4, 1.8, 3.5],
 };
-
 function multiplier(kg, key) {
   const values = reference[key];
   if (!values) return kg / 20;
@@ -26,128 +25,84 @@ function multiplier(kg, key) {
 
 const ingredients = {
   cabbage: { name: '절임배추', amount: 20, unit: 'kg' },
-  sliced: { name: '무 · 채 썰기용', amount: 1600, unit: 'g', key: 'radish' },
-  greens: { name: '홍갓', amount: 400, unit: 'g' },
-  scallions: { name: '쪽파', amount: 200, unit: 'g', key: 'scallions' },
-  stock: { name: '멸치다시마육수', amount: 1300, unit: 'mL', ml: 1300 },
-  stockWater: { name: '물', amount: 7500, unit: 'mL' },
-  stockAnchovy: { name: '국물용 마른 멸치(대멸)', range: [75, 112.5], unit: '마리' },
-  stockKelp: { name: '다시마', amount: 15, unit: '장' },
-  stockOnion: { name: '양파 · 육수용', amount: 1.875, unit: '개' },
-  stockPeel: { name: '사과 껍질 또는 배 껍질', amount: 3.75, unit: '개분' },
-  flour: { name: '찹쌀가루', amount: 90, unit: 'g', key: 'flour', ml: 7 * 15 },
-  pear: { name: '배', amount: 250, unit: 'g' },
-  apple: { name: '사과', amount: 100, unit: 'g' },
-  leek: { name: '대파 흰 부분', amount: 3, unit: '대' },
-  blended: { name: '무 · 믹서용', amount: 500, unit: 'g', key: 'radish' },
-  onion: { name: '양파', amount: 0.5, unit: '개' },
-  shrimp: { name: '새우젓', amount: 200, unit: 'g', key: 'shrimp' },
-  fresh: { name: '생새우', amount: 180, unit: 'g' },
-  paste: { name: '식힌 찹쌀풀', note: '만든 분량 전부' },
-  garlic: { name: '다진 마늘', amount: 400, unit: 'g', key: 'garlic' },
-  ginger: { name: '다진 생강', amount: 100, unit: 'g' },
-  fish: { name: '멸치액젓', amount: 800, unit: 'g', key: 'fish', ml: 700, showMilliliters: true },
-  pepper: { name: '고춧가루', amount: 1100, unit: 'g', key: 'pepper', ml: 1800 },
-  plum: { name: '매실청', amount: 4, unit: '큰술', ml: 60, showMilliliters: true },
-  salt: { name: '소금 · 마지막 간 조절', amount: 50, unit: 'g', ml: 5 * 15 },
+  water: { name: '물 · 육수용', range: [3, 4], unit: 'L' },
+  pollock: { name: '황태 대가리', amount: 3, unit: '개' },
+  stockLeek: { name: '굵은 대파 · 육수용', amount: 1, unit: '대', thin: 2 },
+  kelp: { name: '다시마', amount: 30, unit: 'g' },
+  stockRadish: { name: '무 · 육수용', amount: 400, unit: 'g' },
+  rice: { name: '불린 찹쌀', amount: 340, unit: 'g', cups: 2 },
+  radish: { name: '무 · 채 썰기용', amount: 3, unit: '개', key: 'radish' },
+  pepper: { name: '고춧가루', amount: 850, unit: 'g', cups: 10, key: 'pepper' },
+  greens: { name: '갓', amount: 500, unit: 'g', hint: '청갓 또는 홍갓' },
+  scallions: { name: '쪽파', amount: 1000, unit: 'g', key: 'scallions' },
+  leek: { name: '굵은 대파 · 김칫소용', amount: 2, unit: '대', thin: 3 },
+  fish: { name: '멸치액젓', amount: 1100, unit: 'g', cups: 5, key: 'fish', liquid: true },
+  shrimp: { name: '새우젓', amount: 950, unit: 'g', cups: 4, key: 'shrimp' },
+  fresh: { name: '생새우', amount: 500, unit: 'g', cups: 3 },
+  garlic: { name: '다진 마늘', amount: 800, unit: 'g', cups: 4, key: 'garlic' },
+  ginger: { name: '다진 생강', amount: 60, unit: 'g', spoons: 4 },
+  sugar: { name: '백설탕', amount: 115, unit: 'g', spoons: 8, key: 'sugar' },
+  salt: { name: '천일염', range: [1, 2], unit: '큰술', hint: '선택 · 마지막에 배추와 함께 간을 보고 추가' },
+  msg: { name: '미원', amount: 1, unit: '큰술', hint: '선택 · 조미료를 넣지 않은 새우젓을 쓸 때' },
 };
-
+const stockIngredients = ['water', 'pollock', 'stockLeek', 'kelp', 'stockRadish'];
+const greensIngredients = ['greens', 'scallions', 'leek'];
+const seasoning = ['fish', 'shrimp', 'fresh', 'garlic', 'ginger', 'sugar'];
+const optionalSeasoning = ['salt', 'msg'];
 const groups = [
-  ['재료', ['cabbage', 'sliced', 'greens', 'scallions']],
-  ['찹쌀풀 만들 때', ['stock', 'flour']],
-  ['믹서기에 갈 때', ['pear', 'apple', 'leek', 'blended', 'onion', 'shrimp', 'fresh', 'stock']],
-  ['간 재료에 양념할 때', ['paste', 'garlic', 'ginger', 'fish', 'pepper', 'plum', 'salt']],
+  ['배추 준비', ['cabbage']],
+  ['황태 육수', stockIngredients],
+  ['찹쌀죽', ['rice']],
+  ['무채와 채소', ['radish', 'pepper', ...greensIngredients]],
+  ['김칫소 양념', [...seasoning, ...optionalSeasoning]],
 ];
-
-const cookingSteps = [
-  [
-    '절임배추 받기',
-    '받은 절임배추는 속봉지를 닫은 채 상자를 뒤집어 서늘한 곳에 약 1시간 둡니다. 봉지 아래쪽에 모인 절임물이 배추에 고루 닿게 하는 과정입니다. 제품 안내에 별도 시간이 있으면 그 시간을 따르세요. 대관령원예농협은 추운 날 배송되어 윗부분이 덜 절여진 경우 2~6시간을 안내합니다.',
-    [],
-    [['김진옥 레시피 · 1시간', 'https://www.10000recipe.com/recipe/6967727'], ['대관령원예농협 · 제품 안내', 'https://www.skyvillage.co.kr/m/main.html']],
-  ],
-  [
-    '배추 물 빼기',
-    '상자를 뒤집어 둔 뒤 봉지를 열고, 깨끗한 채반 아래에 물받이를 놓습니다. 배추의 자른 면을 아래로 향하게 놓고 우선 1시간 물을 뺍니다. 물이 계속 떨어지면 상태를 보며 2시간 안팎까지 더 받쳐 두세요. 빼낸 물에 배추가 다시 잠기지 않게 물받이를 비웁니다. 물기를 빼는 동안 찹쌀풀과 채소를 준비하세요.',
-    [],
-    [['김진옥 레시피 · 채반에서 1시간', 'https://www.10000recipe.com/recipe/6967727'], ['절임배추 40kg 조리 예시 · 물받이와 채반', 'https://m.10000recipe.com/recipe/7065985']],
-  ],
-  [
-    '찹쌀풀 쑤기',
-    '아래에 표시된 찹쌀풀용 육수와 찹쌀가루를 사용합니다.',
-    groups[1][1],
-    [['김진옥 원본 레시피 · 찹쌀풀', 'https://www.10000recipe.com/recipe/7037475']],
-    [
-      '불을 켜기 전에 식힌 육수에 찹쌀가루를 넣고 거품기로 덩어리 없이 풉니다.',
-      '중불에서 약 3~5분 저으며 끓입니다. 냄비 바닥과 가장자리까지 훑어 눌어붙지 않게 하고, 끓어오르면 불을 조금 낮춥니다.',
-      '묽은 죽처럼 걸쭉해지고 주걱에 얇게 묻으면 불을 끕니다. 식으면서 더 되직해집니다.',
-      '양념에 섞기 전에 완전히 식힙니다. 양이 많으면 냄비 바깥을 찬물에 받쳐 저어 식히면 시간을 줄일 수 있습니다.',
-    ],
-  ],
-  [
-    '홍갓과 쪽파 손질',
-    '홍갓과 쪽파는 따로 씻고, 잎과 줄기를 약 2cm 길이로 썹니다.',
-    ['greens', 'scallions'],
-    [['김진옥 원본 레시피 · 홍갓과 쪽파', 'https://www.10000recipe.com/recipe/7037475'], ['새미네부엌 · 쪽파 손질법', 'https://semie.cooking/recipe-lab/archive/how-to-clean-green-onion']],
-    [
-      '홍갓은 묶음을 풀고 뿌리와 시든 잎을 떼어냅니다. 줄기가 갈라지는 밑동을 벌려 흙을 털고, 흐르는 물에 잎 뒷면과 줄기 사이를 씻습니다.',
-      '홍갓을 약 2cm로 썬 뒤 한 번 더 헹구고 채반에 받칩니다. 밑동 가까운 줄기 사이에 흙이 남았는지 확인합니다.',
-      '쪽파는 뿌리 끝을 자르고 누런 잎과 흙이 낀 겉껍질을 벗깁니다. 흰 밑동부터 물에 헹군 다음 초록 잎도 씻습니다.',
-      '쪽파는 채반에서 겉물이 빠진 뒤 흰 부분과 초록 부분을 함께 약 2cm로 썹니다. 물기 뺀 홍갓과 쪽파는 김칫소에 넣을 때까지 따로 둡니다.',
-    ],
-  ],
-  ['무 채 썰기', '채 썰기용 무를 씻어 반으로 나눈 다음 채를 썹니다.', ['sliced']],
-  ['갈 재료 썰기', '배와 사과, 대파 흰 부분, 무, 양파를 믹서기에 들어갈 크기로 자릅니다.', ['pear', 'apple', 'leek', 'blended', 'onion']],
-  ['믹서기로 갈기', '썰어 둔 재료에 생새우, 새우젓, 육수를 넣어 곱게 갑니다.', ['fresh', 'shrimp', 'stock']],
-  [
-    '김칫소 만들기',
-    '간 재료와 식힌 찹쌀풀에 마늘, 생강, 액젓, 고춧가루, 매실청을 섞고 무채와 홍갓, 쪽파를 버무립니다. 소금은 마지막에 간을 맞출 때 사용합니다.',
-    groups[3][1],
-    [['김진옥 원본 레시피 · 마지막 소금 간', 'https://www.10000recipe.com/recipe/7037475'], ['FoodSafety.gov · 새우 익히기', 'https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures']],
-    [
-      '물기를 뺀 절임배추의 흰 줄기 한 조각을 먼저 맛봅니다. 배추에 이미 짠맛이 있고 새우젓과 멸치액젓도 들어가므로, 소금은 따로 계량해 둡니다. 절임배추 20kg 기준 50g은 원본의 간 조절용 참고량입니다.',
-      '생새우가 들어간 김칫소는 깨끗한 숟가락으로 한 입 분량만 덜어 충분히 익힌 뒤, 식혀서 절임배추 한 조각에 얇게 발라 함께 맛봅니다.',
-      '함께 먹었을 때 간이 맞으면 소금 추가를 멈춥니다. 싱거우면 계량해 둔 소금 중 일부만 고루 뿌려 섞고, 새로 덜어 익힌 소로 다시 확인합니다.',
-    ],
-  ],
-  ['양념 바르기', '배춧잎을 한 장씩 들춰 흰 줄기 위주로 김칫소를 고루 바릅니다.', []],
-  ['김치통에 담기', '배추를 김치통에 차곡차곡 담습니다. 양념한 겉잎으로 위를 덮고 통을 밀봉합니다.', []],
+const videoUrl = 'https://www.youtube.com/watch?v=yCAmXF76lxs';
+const steps = [
+  ['배추 상자 뒤집기', 18, ['cabbage'], [
+    '받은 절임배추 상자를 물이 흘러도 되는 서늘한 곳에 뒤집어 약 1~2시간 둡니다. 아래쪽에 고인 절임물이 배추에 고루 닿도록 합니다.',
+  ]],
+  ['황태 육수 끓이기', 62, stockIngredients, [
+    '냄비에 물과 황태 대가리, 대파, 다시마, 무를 넣습니다.',
+    '끓기 시작하면 중약불로 줄여 약 30분 우립니다. 다시마도 다른 재료와 함께 우립니다.',
+    '불을 끄고 체로 건더기를 걸러 육수만 남깁니다.',
+  ]],
+  ['황태 육수로 찹쌀죽 쑤기', 128, ['rice'], [
+    '찹쌀은 30분 이상 불려 물기를 빼고, 건더기를 거른 황태 육수에 넣습니다.',
+    '약 15분 끓이면서 쌀알이 퍼져 부드러워지는지 확인합니다. 눌어붙기 시작하면 저어 주고, 국물이 먼저 줄면 물을 조금 더 넣어 끓입니다.',
+    '쌀알이 부드럽게 익으면 불을 끄고, 양념에 넣기 전까지 온기가 없도록 식힙니다.',
+  ]],
+  ['절임배추 물 빼기', 224, ['cabbage'], [
+    '채반에 배추를 뒤집어 놓고 1~2시간 물을 뺍니다.',
+    '헹굴 필요가 있으면 영상의 방법대로 소금물로 가볍게 헹군 뒤 물을 뺍니다.',
+  ]],
+  ['무채에 고춧가루 버무리기', 271, ['radish', 'pepper'], [
+    '무를 채 썰어 고춧가루를 고루 버무립니다. 다른 채소를 손질하는 동안 두어 색이 배게 합니다.',
+  ]],
+  ['갓·쪽파·대파 손질하기', 305, greensIngredients, [
+    '갓은 밑동을 다듬고 깨끗이 씻어 물기를 뺀 뒤 잘게 썹니다.',
+    '쪽파는 흰 부분을 잘게, 초록 부분은 조금 길게 썹니다. 대파는 길이로 반을 갈라 어슷하게 썹니다.',
+  ]],
+  ['김칫소 버무리기', 388, seasoning, [
+    '고춧가루를 입힌 무채에 멸치액젓, 새우젓, 생새우, 다진 마늘, 다진 생강, 백설탕을 넣어 섞습니다.',
+    '식힌 찹쌀죽과 손질한 갓·쪽파·대파를 넣고 고루 버무립니다.',
+  ]],
+  ['천일염과 미원으로 간 조절하기', 453, optionalSeasoning, [
+    '생새우가 들어간 김칫소는 소량만 따로 덜어 충분히 익혀 식힌 다음, 절임배추 속잎 한 조각과 함께 맛봅니다.',
+    '간이 맞으면 천일염을 생략합니다. 싱거우면 표시된 범위에서 조금씩 섞어 조절합니다.',
+    '새우젓에 조미료가 들어 있지 않고 감칠맛을 더하고 싶을 때 미원을 넣습니다.',
+  ]],
+  ['배추에 속을 넣고 보관하기', 545, [], [
+    '안쪽 잎부터 한 장씩 들어 김칫소를 바르고, 흰 줄기 밑부분에 넉넉히 넣습니다.',
+    '겉잎으로 감싸 김치통에 담고, 김장용 비닐을 윗면에 밀착시켜 공기 접촉을 줄입니다.',
+    '영상에서는 서늘한 곳에서 약 24시간 익힌 뒤 김치냉장고로 옮깁니다.',
+  ]],
 ];
-
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
-const stockIngredients = ['stockWater', 'stockAnchovy', 'stockKelp', 'stockOnion', 'stockPeel'];
-const stockSource = ['맛따라삼만리 · 김치용 멸치다시마육수', 'https://www.10000recipe.com/recipe/6877888'];
-const stockNote = '원본은 물 1,000 mL에서 육수 약 360 mL를 얻었습니다. 필요량을 확보하도록 절임배추 1박스당 원본 배합의 7.5배로 잡았습니다. 냄비와 불 세기에 따라 완성량은 달라집니다.';
-const stockInstructions = [
-  '대멸은 내장과 비늘을 덜어내고 냄비에서 먼저 살짝 볶습니다. 깨끗이 씻은 사과나 배의 껍질 중 한 종류를 준비합니다.',
-  '볶은 멸치에 물, 다시마, 양파, 과일 껍질을 넣고 중불로 끓입니다. 약 20분 즈음 국물 맛을 확인합니다.',
-  '다시마를 그대로 둔 채 양파가 푹 부드러워질 때까지 중불로 더 끓입니다. 원본에 걸린 시간은 총 약 40분입니다.',
-  '건더기를 체에 걸러 육수를 식힌 뒤, 표시된 완성 육수 필요량을 계량해 찹쌀풀용과 믹서용으로 반씩 나눕니다.',
-];
-const steps = [
-  [
-    '멸치다시마육수 만들기',
-    stockNote,
-    [...stockIngredients, 'stockTotal'],
-    [stockSource],
-    stockInstructions,
-  ],
-  ...cookingSteps,
-];
-const shoppingIngredients = [
-  'cabbage', 'radishTotal', 'greens', 'scallions', 'stockTotal', ...stockIngredients, 'flour',
-  'pear', 'apple', 'leek', 'onion', 'shrimp', 'fresh', 'garlic', 'ginger',
-  'fish', 'pepper', 'plum', 'salt',
-];
-const totals = {
-  radishTotal: { ...ingredients.sliced, name: '무', amount: ingredients.sliced.amount + ingredients.blended.amount },
-  stockTotal: { ...ingredients.stock, amount: ingredients.stock.amount * 2, ml: ingredients.stock.ml * 2 },
-};
 const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
 const boxInput = byId('box-count');
 const kilogramsPerBox = 20;
-const checklistKey = 'kimchi-checklist-v1';
+const checklistKey = 'kimchi-seoul-checklist-v1';
 const checkedItems = loadChecklist();
 let stepIndex = 0;
 
@@ -181,61 +136,26 @@ function amountText(value, unit) {
   return `${format.format(value)} ${unit}`;
 }
 
-function ingredientHint(id, factor) {
-  switch (id) {
-    case 'cabbage':
-      return `약 ${amountText(factor, '상자')} · ${format.format(7 * factor)}~${amountText(9 * factor, '포기')}`;
-    case 'sliced':
-      return `큰 무 약 ${amountText(factor, '개')} · 채 썰기용`;
-    case 'radishTotal':
-      return `채 썰기용 ${amountText(ingredients.sliced.amount * factor, 'g')} · 믹서용 ${amountText(ingredients.blended.amount * factor, 'g')}`;
-    case 'stockTotal': {
-      const portion = amountText(ingredients.stock.amount * factor, 'mL');
-      return `찹쌀풀용 ${portion} · 믹서용 ${portion}`;
-    }
-    case 'stock':
-      return `원본 육수 계량 기준 약 ${amountText(ingredients.stock.amount * factor, 'g')}`;
-    case 'stockWater':
-      return '끓이기 전 냄비에 붓는 양';
-    case 'stockAnchovy':
-      return '육수용 큰 마른 멸치';
-    case 'stockKelp':
-      return '마른 다시마 · 한 장 약 5 × 5 cm';
-    case 'stockPeel':
-      return '사과나 배 중 한 종류';
-    case 'pear':
-    case 'apple':
-      return `약 ${amountText(0.5 * factor, '개')} · 무게로 계량`;
-    case 'salt':
-      return '버무린 뒤 마지막 간 조절용';
-    default:
-      return '';
-  }
-}
-
 function renderRows(ids, kg, scope) {
   if (!ids.length) return '';
   return '<dl>' + ids.map(id => {
-    const item = ingredients[id] ?? totals[id];
+    const item = ingredients[id];
     const factor = kg ? multiplier(kg, item.key) : 0;
-    const amount = item.note ?? (kg ? scaledAmount(item, factor) : '—');
-    const showVolume = kg && item.ml;
-    const milliliters = showVolume && item.showMilliliters
-      ? ` · 약 ${amountText(item.ml * factor, 'mL')}` : '';
-    const cups = showVolume ? '약 ' + amountText(item.ml * factor / 180, '종이컵') : '';
-    const spoons = showVolume && item.unit !== '큰술'
-      ? ' · ' + amountText(item.ml * factor / 15, '큰술') : '';
-    const hint = kg ? ingredientHint(id, factor) : '';
+    const amount = kg ? scaledAmount(item, factor) : '—';
+    const measure = [];
+    if (kg && item.cups) measure.push(amountText(item.cups * factor, '컵'));
+    if (kg && item.liquid) measure.push(amountText(item.cups * 200 * factor, 'mL'));
+    if (kg && item.spoons) measure.push(amountText(item.spoons * factor, '큰술'));
+    const hint = kg && item.thin ? `가는 대파라면 ${amountText(item.thin * factor, '대')}` : item.hint;
     const label = `${item.name}${hint ? `<small>${hint}</small>` : ''}`;
-    const nested = scope === 'shopping' && stockIngredients.includes(id) ? ' stock-ingredient' : '';
-    return `<div class="row${nested}"><dt>${checkItem(`${scope}:${id}`, label)}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
+    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}</dt><dd>${amount}${measure.length ? `<small>${measure.join(' · ')}</small>` : ''}</dd></div>`;
   }).join('') + '</dl>';
 }
 
 function scaledAmount(item, factor) {
   if (!item.range) return amountText(item.amount * factor, item.unit);
-  const [min, max] = item.range.map(value => Math.max(1, Math.round(value * factor)));
-  return min === max ? amountText(min, item.unit) : `${format.format(min)}~${amountText(max, item.unit)}`;
+  const [min, max] = item.range.map(value => value * factor);
+  return `${format.format(min)}~${amountText(max, item.unit)}`;
 }
 
 function currentWeight() {
@@ -244,12 +164,11 @@ function currentWeight() {
 }
 
 function renderStep() {
-  const [title, description, ids, sources = [], instructions = []] = steps[stepIndex];
-  const scope = stepIndex === 0 ? 'cook:kimchi-stock' : `cook:${stepIndex - 1}`;
+  const [title, seconds, ids, instructions] = steps[stepIndex];
+  const scope = `cook:${stepIndex}`;
   const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
-  const sourceLinks = sources.map(([label, url]) => `<li><a href="${url}">${label}</a></li>`).join('');
   byId('step-count').textContent = `${stepIndex + 1} / ${steps.length} 단계`;
-  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3><p>${description}</p>${renderRows(ids, currentWeight(), scope)}${instructionList ? `<ol>${instructionList}</ol>` : ''}${sourceLinks ? `<ul>${sourceLinks}</ul>` : ''}`;
+  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol><p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`;
   Array.from(byId('step-list').children).forEach((button, index) => {
     button.setAttribute('aria-pressed', index === stepIndex);
   });
@@ -273,17 +192,12 @@ function renderAmounts() {
   byId('weight-status').textContent = kg
     ? `총 ${amountText(kg, 'kg')}${estimate}`
     : '0.01박스 이상 입력하세요';
-  byId('shopping-list').innerHTML = renderRows(shoppingIngredients, kg, 'shopping');
-  const stockSteps = stockInstructions.map((line, index) =>
-    `<li>${checkItem(`prep:kimchi-stock:instruction:${index}`, line)}</li>`).join('');
-  const stockCard = `<article><h3>멸치다시마육수 만들기</h3>
-    <p>${stockNote}</p>
-    ${renderRows(stockIngredients, kg, 'prep:kimchi-stock')}
-    <ol>${stockSteps}</ol>
-    ${renderRows(['stockTotal'], kg, 'prep:stock')}
-    <p><a href="${stockSource[1]}">${stockSource[0]}</a></p></article>`;
-  byId('ingredients').innerHTML = stockCard + groups.map(([title, ids], index) =>
-    `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}</article>`).join('');
+  byId('shopping-list').innerHTML = renderRows(groups.flatMap(([, ids]) => ids), kg, 'shopping');
+  byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
+    const instructions = index === 1 || index === 2 ? steps[index][3] : [];
+    const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
+    return `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}${list ? `<ol>${list}</ol>` : ''}</article>`;
+  }).join('');
   renderStep();
 }
 

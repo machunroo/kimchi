@@ -36,7 +36,7 @@ const groups = [
   ['육수', stock, 'stock'],
   ['찹쌀풀', ['riceFlour'], 'paste'],
   ['믹서에 갈 재료', blend],
-  ['양념과 김칫소 채소', ['pepper', 'salt', ...vegetables]],
+  ['김치양념', ['pepper', 'salt', ...vegetables]],
   ['김치통 덮개', cover],
 ];
 
@@ -59,6 +59,7 @@ const combinedShoppingIds = new Set(['radish', 'blendRadish', 'blendOnion', 'cov
 const shoppingIds = groups.flatMap(([, ids]) => ids).filter(id => !combinedShoppingIds.has(id));
 
 const videoUrl = 'https://youtu.be/BE4oP2FzDYA';
+const seasoningCheck = '절임배추 한 조각에 김칫소를 얹어 맛본 뒤, 싱거우면 남겨 둔 멸치액젓을 조금씩 더합니다.';
 const pasteNotice = '<p><strong>주의사항</strong> · 반드시 육수를 완전히 식힌 상태에서 사용할 것</p>';
 
 const steps = {
@@ -89,7 +90,7 @@ const steps = {
   ]],
   filling: ['김칫소 버무리기', 375, ['pepper', 'salt', ...vegetables], [
     '갈아 둔 양념에 고춧가루를 섞습니다.',
-    '무채, 청갓, 쪽파, 청각을 넣고 버무립니다. 절임배추와 함께 맛보고 남겨 둔 멸치액젓으로 간을 맞춥니다. 그래도 싱거우면 천일염을 조금씩 넣습니다.',
+    `무채, 청갓, 쪽파, 청각을 넣고 버무립니다. ${seasoningCheck} 그래도 싱거우면 천일염을 조금씩 넣습니다.`,
   ]],
   pack: ['배추에 속을 넣어 담기', 504, [], [
     '푸른 겉잎을 아래로 펴고, 잎을 한 장씩 넘기며 줄기 안쪽까지 김칫소를 바릅니다. 처음부터 많이 바르지 말고 남은 배추 양에 맞춰 나눠 씁니다.',
@@ -219,8 +220,9 @@ function renderAmounts() {
   byId('shopping-list').innerHTML = renderRows(shoppingIds, kg, 'shopping', shoppingIngredients);
   byId('ingredients').innerHTML = groups.map(([title, ids, stepId], index) => {
     const instructions = stepId ? steps[stepId][3] : [];
+    const confirmation = ids.includes('pepper') ? `<p>${checkItem('prep:seasoning:confirm', `<strong>확인하기</strong> · ${seasoningCheck}`)}</p>` : '';
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
-    return `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}${stepId === 'paste' ? pasteNotice : ''}${list ? `<ol>${list}</ol>` : ''}</article>`;
+    return `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}${stepId === 'paste' ? pasteNotice : ''}${list ? `<ol>${list}</ol>` : ''}${confirmation}</article>`;
   }).join('');
   renderStep();
 }

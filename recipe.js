@@ -4,7 +4,7 @@ const ingredients = {
   pollock: { name: '황태 대가리', amount: 3, unit: '개' },
   stockLeek: { name: '대파', amount: 1, unit: '대' },
   stockKelp: { name: '건다시마', amount: 30, unit: 'g' },
-  stockRadish: { name: '다발무', amount: 30, unit: 'g' },
+  stockRadish: { name: '다발무', amount: 300, unit: 'g' },
   riceFlour: { name: '찹쌀가루', amount: 300, unit: 'g' },
   garlic: { name: '마늘', amount: 400, unit: 'g' },
   ginger: { name: '생강', amount: 200, unit: 'g' },

@@ -33,6 +33,13 @@ dl{margin:0}
 .row:last-child{border-bottom:0}
 .check-item{display:flex;gap:8px;align-items:baseline;cursor:pointer;font-weight:inherit}
 .check-item input{flex:none;width:1rem;height:1rem;margin:0;accent-color:var(--red)}
+.guide-button{margin:.25rem 0 0 1.5rem;padding:4px 8px;min-height:30px;font-size:.875rem;color:#823324}
+#greens-guide{width:min(30rem,calc(100% - 32px));max-height:calc(100% - 32px);border:1px solid var(--line);border-radius:16px;padding:20px;color:var(--ink);background:white}
+#greens-guide::backdrop{background:rgb(48 39 34 / .55)}
+.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.dialog-heading h2{font-size:1.4rem}
+.dialog-close{width:44px;padding:0;font-size:1.5rem}
+#greens-guide p{margin:.35rem 0 .9rem}
 #step ol li + li{margin-top:8px}
 dd{margin:0;text-align:right;font-weight:750;font-variant-numeric:tabular-nums}
 dd small{font-weight:400;margin-top:3px}

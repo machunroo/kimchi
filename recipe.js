@@ -148,7 +148,8 @@ function renderRows(ids, kg, scope) {
     if (kg && item.spoons) measure.push(amountText(item.spoons * factor, '큰술'));
     const hint = kg && item.thin ? `가는 대파라면 ${amountText(item.thin * factor, '대')}` : item.hint;
     const label = `${item.name}${hint ? `<small>${hint}</small>` : ''}`;
-    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}</dt><dd>${amount}${measure.length ? `<small>${measure.join(' · ')}</small>` : ''}</dd></div>`;
+    const guide = id === 'greens' ? '<button type="button" class="guide-button" data-greens-guide aria-haspopup="dialog" aria-controls="greens-guide">청갓·홍갓 설명</button>' : '';
+    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}${guide}</dt><dd>${amount}${measure.length ? `<small>${measure.join(' · ')}</small>` : ''}</dd></div>`;
   }).join('') + '</dl>';
 }
 
@@ -230,5 +231,8 @@ byId('next').onclick = () => {
   if (stepIndex === steps.length - 1) showSection('prep', true);
   else { stepIndex += 1; renderStep(); }
 };
+document.addEventListener('click', ({ target }) => {
+  if (target.closest('[data-greens-guide]')) byId('greens-guide').showModal();
+});
 boxInput.addEventListener('input', renderAmounts);
 renderAmounts();

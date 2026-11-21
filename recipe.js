@@ -67,19 +67,19 @@ const steps = [
     '불을 끄고 체로 건더기를 걸러 육수만 남깁니다.',
   ]],
   ['황태 육수로 찹쌀죽 쑤기', 128, ['rice'], [
-    '찹쌀은 30분 이상 불려 물기를 빼고, 건더기를 거른 황태 육수에 넣습니다.',
+    '불린 찹쌀의 물기를 빼고, 건더기를 거른 황태 육수에 넣습니다.',
     '약 15분 끓이면서 쌀알이 퍼져 부드러워지는지 확인합니다. 눌어붙기 시작하면 저어 주고, 국물이 먼저 줄면 물을 조금 더 넣어 끓입니다.',
-    '쌀알이 부드럽게 익으면 불을 끄고, 양념에 넣기 전까지 온기가 없도록 식힙니다.',
+    '쌀알이 부드럽게 익으면 불을 끕니다. 찹쌀죽은 얕은 용기에 나눠 빠르게 식혀 냉장하고, 김장 당일 양념에 섞습니다.',
   ]],
   ['절임배추 물 빼기', 224, ['cabbage'], [
     '채반에 배추를 뒤집어 놓고 1~2시간 물을 뺍니다.',
     '헹굴 필요가 있으면 영상의 방법대로 소금물로 가볍게 헹군 뒤 물을 뺍니다.',
   ]],
   ['무채에 고춧가루 버무리기', 271, ['radish', 'pepper'], [
-    '무를 채 썰어 고춧가루를 고루 버무립니다. 다른 채소를 손질하는 동안 두어 색이 배게 합니다.',
+    '채 썬 무에 고춧가루를 고루 버무린 뒤, 나머지 양념을 계량하는 동안 두어 색이 배게 합니다.',
   ]],
-  ['갓·쪽파·대파 손질하기', 305, greensIngredients, [
-    '갓은 밑동을 다듬고 깨끗이 씻어 물기를 뺀 뒤 잘게 썹니다.',
+  ['갓·쪽파·대파 썰기', 305, greensIngredients, [
+    '미리 씻어 물기를 뺀 갓을 잘게 썹니다.',
     '쪽파는 흰 부분을 잘게, 초록 부분은 조금 길게 썹니다. 대파는 길이로 반을 갈라 어슷하게 썹니다.',
   ]],
   ['김칫소 버무리기', 388, seasoning, [
@@ -96,6 +96,21 @@ const steps = [
     '겉잎으로 감싸 김치통에 담고, 김장용 비닐을 윗면에 밀착시켜 공기 접촉을 줄입니다.',
     '영상에서는 서늘한 곳에서 약 24시간 익힌 뒤 김치냉장고로 옮깁니다.',
   ]],
+  ['찹쌀 불리기 (30분)', 128, ['rice'], [
+    '찹쌀을 씻고 물에 30분 이상 불립니다. 체에 받쳐 물기를 뺍니다. 화면의 분량은 불린 뒤의 찹쌀 기준입니다.',
+  ]],
+  ['김칫소 손질하기 (무, 갓, 쪽파, 대파)', 305, ['radish', ...greensIngredients], [
+    '무는 흙을 씻고 양 끝을 다듬습니다. 갓은 밑동과 시든 잎을 떼고, 쪽파와 대파는 뿌리와 누런 잎을 정리합니다.',
+    '갓과 파의 줄기 사이를 씻고 물기를 뺍니다. 손질한 무와 채소는 냉장해 두었다가 김장 당일 썹니다.',
+  ]],
+  ['무채 썰기', 271, ['radish'], [
+    '손질해 둔 김칫소용 무를 꺼내 가늘고 고르게 채 썹니다.',
+  ]],
+];
+// Keep step IDs stable so existing checklist entries stay with their original steps.
+const cookingDays = [
+  { tab: 'day-before', stepIds: [9, 1, 2, 10] },
+  { tab: 'day-of', stepIds: [0, 3, 11, 5, 4, 6, 7, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
@@ -104,7 +119,8 @@ const boxInput = byId('box-count');
 const kilogramsPerBox = 20;
 const checklistKey = 'kimchi-seoul-checklist-v1';
 const checkedItems = loadChecklist();
-let stepIndex = 0;
+let dayIndex = 0;
+let stepPosition = 0;
 
 function loadChecklist() {
   try {
@@ -165,16 +181,28 @@ function currentWeight() {
 }
 
 function renderStep() {
-  const [title, seconds, ids, instructions] = steps[stepIndex];
-  const scope = `cook:${stepIndex}`;
+  const { stepIds } = cookingDays[dayIndex];
+  const stepId = stepIds[stepPosition];
+  const [title, seconds, ids, instructions] = steps[stepId];
+  const scope = `cook:${stepId}`;
   const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
-  byId('step-count').textContent = `${stepIndex + 1} / ${steps.length} 단계`;
+  byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
   byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol><p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`;
-  Array.from(byId('step-list').children).forEach((button, index) => {
-    button.setAttribute('aria-pressed', index === stepIndex);
+  Array.from(byId('step-list').children).forEach(button => {
+    const id = Number(button.dataset.stepId);
+    button.hidden = !stepIds.includes(id);
+    button.setAttribute('aria-pressed', id === stepId);
   });
-  byId('prev').disabled = stepIndex === 0;
-  byId('next').textContent = stepIndex === steps.length - 1 ? '준비로 돌아가기' : '다음';
+  byId('prev').disabled = dayIndex === 0 && stepPosition === 0;
+  const atEnd = stepPosition === stepIds.length - 1;
+  byId('next').textContent = atEnd ? (dayIndex === 0 ? '김장 당일로' : '준비로 돌아가기') : '다음';
+}
+
+function selectCookingDay(day, position = 0) {
+  dayIndex = day;
+  stepPosition = position;
+  cookingDays.forEach(({ tab }, index) => byId(tab).setAttribute('aria-pressed', index === dayIndex));
+  renderStep();
 }
 
 function showSection(section, focusTitle = false) {
@@ -202,13 +230,17 @@ function renderAmounts() {
   renderStep();
 }
 
-steps.forEach(([title], index) => {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.textContent = index + 1;
-  button.setAttribute('aria-label', `${index + 1}단계 ${title}`);
-  button.onclick = () => { stepIndex = index; renderStep(); };
-  byId('step-list').append(button);
+cookingDays.forEach(({ tab, stepIds }, day) => {
+  byId(tab).onclick = () => selectCookingDay(day);
+  stepIds.forEach((id, position) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = position + 1;
+    button.dataset.stepId = id;
+    button.setAttribute('aria-label', `${position + 1}단계 ${steps[id][0]}`);
+    button.onclick = () => selectCookingDay(day, position);
+    byId('step-list').append(button);
+  });
 });
 for (const [tab, panel] of sections) byId(tab).onclick = () => showSection(panel);
 document.addEventListener('change', ({ target }) => {
@@ -221,15 +253,19 @@ document.addEventListener('change', ({ target }) => {
 byId('restart').onclick = () => {
   checkedItems.clear();
   saveChecklist();
-  stepIndex = 0;
+  selectCookingDay(0);
   renderAmounts();
   showSection('shopping', true);
 };
 byId('start').onclick = () => showSection('cook', true);
-byId('prev').onclick = () => { stepIndex -= 1; renderStep(); };
+byId('prev').onclick = () => {
+  if (stepPosition > 0) selectCookingDay(dayIndex, stepPosition - 1);
+  else if (dayIndex > 0) selectCookingDay(0, cookingDays[0].stepIds.length - 1);
+};
 byId('next').onclick = () => {
-  if (stepIndex === steps.length - 1) showSection('prep', true);
-  else { stepIndex += 1; renderStep(); }
+  if (stepPosition < cookingDays[dayIndex].stepIds.length - 1) selectCookingDay(dayIndex, stepPosition + 1);
+  else if (dayIndex === 0) selectCookingDay(1);
+  else showSection('prep', true);
 };
 document.addEventListener('click', ({ target }) => {
   if (target.closest('[data-greens-guide]')) byId('greens-guide').showModal();

@@ -48,6 +48,9 @@ summary{cursor:pointer;font-weight:700}
 .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 .step-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px;margin-bottom:14px}
 .step-toolbar .actions{margin-top:0}
+.cook-days{display:flex;flex-wrap:wrap;gap:8px}
+.cook-days button{flex:1 1 12rem}
+#step-count{margin:8px 0;color:var(--muted)}
 .step-toolbar #next{width:8.5rem;padding-inline:8px}
 #step-list{display:flex;flex-wrap:wrap;gap:6px}
 #step-list button{padding-inline:14px}

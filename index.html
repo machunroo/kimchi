@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리집 김장 | 김장 레시피</title>
-<link rel="stylesheet" href="./style.css?v=mustard-guide">
-<script defer src="./recipe.js?v=mustard-guide"></script>
+<link rel="stylesheet" href="./style.css?v=cooking-days">
+<script defer src="./recipe.js?v=cooking-days"></script>
 </head>
 <body>
 <main>
@@ -34,7 +34,12 @@
     <div class="actions"><button type="button" id="start">조리 시작</button></div>
   </section>
   <section id="cook" aria-labelledby="cook-title" hidden>
-    <div class="intro"><h2 id="cook-title" tabindex="-1">조리 순서</h2><p id="step-count"></p></div>
+    <div class="intro"><h2 id="cook-title" tabindex="-1">조리 순서</h2></div>
+    <div class="cook-days" role="group" aria-label="김장 일정">
+      <button type="button" id="day-before" aria-pressed="true" aria-controls="step">김장 하루 전 (또는 6시간 전)</button>
+      <button type="button" id="day-of" aria-pressed="false" aria-controls="step">김장 당일</button>
+    </div>
+    <p id="step-count"></p>
     <div class="step-toolbar">
       <div id="step-list" role="group" aria-label="조리 단계 선택"></div>
       <div class="actions" role="group" aria-label="조리 단계 이동">

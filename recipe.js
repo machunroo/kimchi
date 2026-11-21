@@ -1,15 +1,16 @@
 const ingredients = {
   cabbage: { name: '해남 절임배추', amount: 20, unit: 'kg' },
-  water: { name: '물 · 육수용', range: [3, 4], unit: 'L' },
+  water: { name: '물 · 육수용', amount: 2, unit: 'L' },
   pollock: { name: '황태 대가리', amount: 3, unit: '개' },
-  stockLeek: { name: '굵은 대파 · 육수용', amount: 1, unit: '대', thin: 2 },
+  stockLeek: { name: '대파 · 육수용', amount: 1, unit: '대' },
   stockKelp: { name: '건다시마 · 육수용', amount: 30, unit: 'g' },
-  stockRadish: { name: '다발무 · 육수용', amount: 400, unit: 'g' },
+  stockRadish: { name: '다발무 · 육수용', amount: 2, unit: '개' },
   riceFlour: { name: '습식 찹쌀가루', amount: 300, unit: 'g' },
   driedChili: { name: '건고추', amount: 250, unit: 'g' },
   garlic: { name: '마늘', amount: 400, unit: 'g' },
   ginger: { name: '생강', amount: 200, unit: 'g' },
   shrimpPaste: { name: '새우젓', amount: 250, unit: 'g' },
+  stockOnion: { name: '양파 · 육수용', amount: 1, unit: '개' },
   blendRadish: { name: '다발무 · 믹서용', amount: 700, unit: 'g', hint: '시원한 맛을 위해 원본보다 추가', extra: 200 },
   plum: { name: '매실청', amount: 300, unit: 'mL', cups: true },
   pear: { name: '배', amount: 1, unit: '개' },
@@ -18,7 +19,7 @@ const ingredients = {
   fish: { name: '멸치액젓', amount: 500, unit: 'mL', cups: true },
   pepper: { name: '고춧가루', amount: 1000, unit: 'g' },
   salt: { name: '천일염 · 간 맞춤용', amount: 3, unit: '숟갈', hint: '선택 · 간을 보며 조금씩' },
-  radish: { name: '다발무 · 무채용', quantity: '남은 분량' },
+  radish: { name: '다발무 · 무채용', quantity: '원하는 만큼' },
   greens: { name: '청갓', amount: 600, unit: 'g', bundles: 1 },
   scallions: { name: '쪽파', amount: 500, unit: 'g', bundles: 0.5 },
   seaweed: { name: '건청각', amount: 100, unit: 'g' },
@@ -26,7 +27,7 @@ const ingredients = {
   soju: { name: '소주 · 다시마 적심용', quantity: '적당량', hint: '선택' },
 };
 
-const stock = ['water', 'pollock', 'stockLeek', 'stockKelp', 'stockRadish'];
+const stock = ['water', 'stockRadish', 'stockOnion', 'stockLeek', 'stockKelp', 'pollock'];
 const blend = ['driedChili', 'garlic', 'ginger', 'shrimpPaste', 'blendRadish', 'plum', 'pear', 'apple', 'blendOnion', 'fish'];
 const vegetables = ['radish', 'greens', 'scallions', 'seaweed'];
 const cover = ['coverKelp', 'soju'];
@@ -44,26 +45,28 @@ const shoppingIngredients = {
   ...ingredients,
   stockRadish: {
     name: '다발무',
-    amount: 2,
+    amount: ingredients.stockRadish.amount,
     unit: '개',
-    hint: '육수와 믹서용을 덜고 남은 분량은 무채로 사용',
+    extraWeight: ingredients.blendRadish.amount,
+    hint: '무채로 쓸 분량은 별도로 준비',
   },
+  stockOnion: { name: '양파', amount: ingredients.stockOnion.amount + ingredients.blendOnion.amount, unit: '개' },
   stockKelp: {
     name: '건다시마',
     amount: ingredients.stockKelp.amount + ingredients.coverKelp.amount,
     unit: 'g',
   },
 };
-const combinedShoppingIds = new Set(['radish', 'blendRadish', 'coverKelp']);
+const combinedShoppingIds = new Set(['radish', 'blendRadish', 'blendOnion', 'coverKelp']);
 const shoppingIds = groups.flatMap(([, ids]) => ids).filter(id => !combinedShoppingIds.has(id));
 
 const videoUrl = 'https://youtu.be/BE4oP2FzDYA';
 const steps = {
-  stock: ['황태·다시마 육수 끓이기', 62, stock, [
-    '냄비에 물, 황태 대가리, 대파, 다시마, 육수용 다발무를 넣습니다.',
+  stock: ['황태·다시마 육수 끓이기', 159, stock, [
+    '냄비에 물, 다발무, 양파, 대파, 다시마, 황태 대가리를 넣습니다.',
     '끓기 시작하면 중약불로 줄여 다시마를 포함한 모든 재료를 약 30분 우립니다.',
     '불을 끄고 건더기를 체로 걸러 육수만 남깁니다.',
-  ], 'https://youtu.be/yCAmXF76lxs'],
+  ]],
   paste: ['육수로 찹쌀풀 쑤기', 246, ['riceFlour'], [
     '건더기를 거른 육수에 습식 찹쌀가루를 넣고 덩어리 없이 풀어 줍니다.',
     '센 불에서 바닥까지 저으며 끓입니다.',
@@ -74,7 +77,7 @@ const steps = {
   ]],
   vegetables: ['무채와 채소 손질하기', null, vegetables, [
     '건청각을 물에 약 2시간 불립니다. 씻어 물기를 뺀 뒤 잘게 다집니다.',
-    '육수용과 믹서용으로 쓸 다발무를 먼저 덜어 두고 나머지는 채 썹니다. 청갓은 밑동과 누런 잎을 떼고 줄기 사이를 씻습니다. 물기를 뺀 뒤 3~4 cm 길이로 썹니다. 쪽파도 씻어 물기를 빼고 먹기 좋게 썹니다.',
+    '무채용 다발무를 준비했다면 채 썹니다. 청갓은 밑동과 누런 잎을 떼고 줄기 사이를 씻습니다. 물기를 뺀 뒤 3~4 cm 길이로 썹니다. 쪽파도 씻어 물기를 빼고 먹기 좋게 썹니다.',
   ]],
   blend: ['건고추와 양념 갈기', 283, blend, [
     '건고추를 불리고 믹서용 다발무, 배, 사과, 양파를 썹니다.',
@@ -151,6 +154,7 @@ function renderRows(ids, kg, scope, items = ingredients) {
     const factor = kg / kilogramsPerBox;
     const amount = item.quantity ?? (factor ? scaledAmount(item, factor) : '—');
     const measure = [];
+    if (factor && item.extraWeight) measure.push(`믹서용 ${amountText(item.extraWeight * factor, 'g')} 별도`);
     if (factor && item.thin) measure.push(`가는 대파 ${amountText(item.thin * factor, item.unit)}`);
     if (factor && item.cups) measure.push(amountText(item.amount * factor / 200, '컵'));
     if (factor && item.bundles) measure.push(amountText(item.bundles * factor, '단'));

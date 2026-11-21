@@ -58,7 +58,7 @@ const groups = [
   ['간 재료에 양념할 때', ['paste', 'garlic', 'ginger', 'fish', 'pepper', 'plum', 'salt']],
 ];
 
-const steps = [
+const cookingSteps = [
   [
     '절임배추 받기',
     '받은 절임배추는 속봉지를 닫은 채 상자를 뒤집어 서늘한 곳에 약 1시간 둡니다. 봉지 아래쪽에 모인 절임물이 배추에 고루 닿게 하는 과정입니다. 제품 안내에 별도 시간이 있으면 그 시간을 따르세요. 대관령원예농협은 추운 날 배송되어 윗부분이 덜 절여진 경우 2~6시간을 안내합니다.',
@@ -122,6 +122,16 @@ const stockInstructions = [
   '고운 체로 건더기를 거른 뒤 육수를 식힙니다.',
   '아래에 표시된 완성 육수 필요량을 계량해 찹쌀풀용과 믹서용으로 나눕니다. 냄비와 불 세기에 따라 완성량이 달라지므로 계량컵으로 확인하세요.',
 ];
+const steps = [
+  [
+    '멸치다시마육수 만들기',
+    '멸치와 다시마로 육수를 끓여 식힌 뒤, 찹쌀풀용과 믹서용으로 반씩 나눕니다. 물은 끓이기 전 분량이고, 완성 육수는 걸러서 실제로 사용할 분량입니다.',
+    [...stockIngredients, 'stockTotal'],
+    [['김진옥의 기본 멸치다시마육수', 'https://hls3790.tistory.com/800']],
+    stockInstructions,
+  ],
+  ...cookingSteps,
+];
 const shoppingIngredients = [
   'cabbage', 'radishTotal', 'greens', 'scallions', 'stockTotal', ...stockIngredients, 'flour',
   'pear', 'apple', 'leek', 'onion', 'shrimp', 'fresh', 'garlic', 'ginger',
@@ -182,8 +192,14 @@ function ingredientHint(id, factor) {
     }
     case 'stock':
       return `원본 육수 계량 기준 약 ${amountText(ingredients.stock.amount * factor, 'g')}`;
+    case 'stockWater':
+      return '끓이기 전 냄비에 붓는 양';
+    case 'stockAnchovy':
+      return '육수용 큰 마른 멸치';
     case 'stockKelp':
-      return '한 조각 약 10 × 10 cm';
+      return '마른 다시마 · 한 조각 약 10 × 10 cm';
+    case 'stockLeek':
+      return '육수에 넣고 끓인 뒤 건지는 대파';
     case 'pear':
     case 'apple':
       return `약 ${amountText(0.5 * factor, '개')} · 무게로 계량`;
@@ -220,7 +236,7 @@ function currentWeight() {
 
 function renderStep() {
   const [title, description, ids, sources = [], instructions = []] = steps[stepIndex];
-  const scope = `cook:${stepIndex}`;
+  const scope = stepIndex === 0 ? 'cook:stock' : `cook:${stepIndex - 1}`;
   const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
   const sourceLinks = sources.map(([label, url]) => `<li><a href="${url}">${label}</a></li>`).join('');
   byId('step-count').textContent = `${stepIndex + 1} / ${steps.length} 단계`;

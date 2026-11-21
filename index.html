@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리집 김장 | 김장 레시피</title>
 <link rel="stylesheet" href="./style.css?v=cooking-days">
-<script defer src="./recipe.js?v=remember-boxes"></script>
+<script defer src="./recipe.js?v=recipe-20kg"></script>
 </head>
 <body>
 <main>
   <header class="hero">
-    <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 박스 수를 입력하면 재료량이 자동으로 바뀝니다.</p></div>
+    <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 1박스는 20 kg입니다. 박스 수에 따라 김치 재료가 자동으로 바뀝니다.</p></div>
     <div class="weight">
       <label for="box-count">절임배추</label>
       <div class="input"><input id="box-count" type="number" min="0.01" step="any" value="1" aria-describedby="weight-status"><span>박스</span></div>
@@ -24,19 +24,19 @@
     <button type="button" id="restart">다시 시작하기</button>
   </nav>
   <section id="shopping" aria-labelledby="shopping-title">
-    <div class="intro"><h2 id="shopping-title" tabindex="-1">김장 재료 전체</h2><p>영상의 계량 기준은 1컵 200 mL, 1큰술 15 mL, 1작은술 5 mL입니다.</p></div>
+    <div class="intro"><h2 id="shopping-title" tabindex="-1">김장 재료 전체</h2><p>맛소금 수육은 삼겹살 1.8 kg 기준입니다.</p></div>
     <article id="shopping-list"></article>
   </section>
   <section id="prep" aria-labelledby="prep-title" hidden>
-    <div class="intro"><h2 id="prep-title" tabindex="-1">용도별 재료 준비</h2><p>황태 육수와 찹쌀죽, 채소와 양념을 용도별로 준비합니다.</p></div>
+    <div class="intro"><h2 id="prep-title" tabindex="-1">용도별 재료 준비</h2><p>육수, 찹쌀풀, 김칫소 재료를 용도별로 준비합니다.</p></div>
     <div id="ingredients" class="grid"></div>
-    <details><summary>계량과 환산 기준</summary><p>절임배추 1박스(20 kg)에는 영상 분량을 적용합니다. 다른 중량에서는 고춧가루·다진 마늘·새우젓·멸치액젓·김칫소용 무·쪽파·백설탕에 중량 참고표의 재료별 증가율을 적용합니다. 나머지 재료는 배추 무게에 비례합니다.</p><p>컵은 영상에서 사용한 200 mL 계량컵입니다. 컵과 g 계량이 모두 있는 재료는 영상에 제시된 값을 각각 표시합니다.</p></details>
+    <details><summary>계량과 환산 기준</summary><p>김장김치와 굴김치 재료는 절임배추 20 kg 기준으로 비례 환산합니다. 수육 재료는 영상 분량으로 표시합니다. 새우젓은 원문에 컵 수가 빠져 있습니다.</p></details>
     <div class="actions"><button type="button" id="start">조리 시작</button></div>
   </section>
   <section id="cook" aria-labelledby="cook-title" hidden>
     <div class="intro"><h2 id="cook-title" tabindex="-1">조리 순서</h2></div>
     <div class="cook-days" role="group" aria-label="김장 일정">
-      <button type="button" id="day-before" aria-pressed="true" aria-controls="step">김장 하루 전 (또는 6시간 전)</button>
+      <button type="button" id="day-before" aria-pressed="true" aria-controls="step">김장 전 준비</button>
       <button type="button" id="day-of" aria-pressed="false" aria-controls="step">김장 당일</button>
     </div>
     <p id="step-count"></p>
@@ -49,7 +49,18 @@
     </div>
     <article id="step" aria-live="polite"></article>
   </section>
-  <footer><a href="https://www.youtube.com/watch?v=yCAmXF76lxs">중부식 김장김치 20 kg 원본 영상</a><a href="https://www.youtube.com/channel/UC37fRkl_iIjDAr9pf0FFzGA">딸을 위한 레시피 Recipes for daughters</a><a href="https://m.blog.naver.com/notetip/224058717360">중량별 양념 참고표</a></footer>
+  <details>
+    <summary>영상 타임라인</summary>
+    <ul>
+      <li>00:00 오프닝</li>
+      <li>00:33 육수 만들기</li>
+      <li>03:54 양념 만들기</li>
+      <li>08:09 김칫소 넣기</li>
+      <li>10:06 맛소금 수육</li>
+      <li>13:09 김치 보관 팁</li>
+      <li>14:26 굴김치</li>
+    </ul>
+  </details>
 </main>
 <dialog id="greens-guide" aria-labelledby="greens-guide-title">
   <div class="dialog-heading">

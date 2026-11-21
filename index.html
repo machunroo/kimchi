@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리집 김장 | 김장 레시피</title>
-<link rel="stylesheet" href="./style.css?v=checklist">
-<script defer src="./recipe.js?v=checklist"></script>
+<link rel="stylesheet" href="./style.css?v=box-count">
+<script defer src="./recipe.js?v=box-count"></script>
 </head>
 <body>
 <main>
   <header class="hero">
-    <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 무게를 입력하고, 재료 준비부터 버무리기까지.</p></div>
+    <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 박스 수를 입력하면 재료량이 자동으로 바뀝니다.</p></div>
     <div class="weight">
-      <label for="weight">절임배추</label>
-      <div class="input"><input id="weight" type="number" min="0.1" step="any" value="20" aria-describedby="weight-status"><span>kg</span></div>
+      <label for="box-count">절임배추</label>
+      <div class="input"><input id="box-count" type="number" min="0.01" step="any" value="1" aria-describedby="weight-status"><span>박스</span></div>
       <small id="weight-status" aria-live="polite"></small>
     </div>
   </header>

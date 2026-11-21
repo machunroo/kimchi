@@ -121,7 +121,8 @@ const totals = {
   stockTotal: { ...ingredients.stock, amount: ingredients.stock.amount * 2, ml: ingredients.stock.ml * 2 },
 };
 const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
-const weightInput = byId('weight');
+const boxInput = byId('box-count');
+const kilogramsPerBox = 20;
 const checklistKey = 'kimchi-checklist-v1';
 const checkedItems = loadChecklist();
 let stepIndex = 0;
@@ -199,8 +200,8 @@ function renderRows(ids, kg, scope) {
 }
 
 function currentWeight() {
-  return weightInput.validity.valid && Number.isFinite(weightInput.valueAsNumber)
-    ? weightInput.valueAsNumber : null;
+  const kg = boxInput.valueAsNumber * kilogramsPerBox;
+  return boxInput.validity.valid && Number.isFinite(kg) ? kg : null;
 }
 
 function renderStep() {
@@ -228,10 +229,11 @@ function showSection(section, focusTitle = false) {
 
 function renderAmounts() {
   const kg = currentWeight();
-  weightInput.setAttribute('aria-invalid', !kg);
-  byId('weight-status').textContent = !kg ? '0.1 kg 이상 입력하세요'
-    : kg === 20 ? '20 kg 원본 계량'
-    : kg < 20 || kg > 235 ? '표 범위 밖 · 비례 추정' : '중량별 계량 적용';
+  boxInput.setAttribute('aria-invalid', !kg);
+  const estimate = kg && (kg < 20 || kg > 235) ? ' · 비례 추정' : '';
+  byId('weight-status').textContent = kg
+    ? `총 ${amountText(kg, 'kg')}${estimate}`
+    : '0.01박스 이상 입력하세요';
   byId('shopping-list').innerHTML = renderRows(shoppingIngredients, kg, 'shopping');
   byId('ingredients').innerHTML = groups.map(([title, ids], index) =>
     `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}</article>`).join('');
@@ -267,5 +269,5 @@ byId('next').onclick = () => {
   if (stepIndex === steps.length - 1) showSection('prep', true);
   else { stepIndex += 1; renderStep(); }
 };
-weightInput.addEventListener('input', renderAmounts);
+boxInput.addEventListener('input', renderAmounts);
 renderAmounts();

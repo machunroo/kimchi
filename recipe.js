@@ -10,7 +10,7 @@ const ingredients = {
   ginger: { name: '생강', amount: 200, unit: 'g' },
   shrimpPaste: { name: '새우젓', amount: 250, unit: 'g' },
   stockOnion: { name: '양파', amount: 1, unit: '개' },
-  blendRadish: { name: '다발무 · 믹서용', amount: 700, unit: 'g', hint: '시원한 맛을 위해 원본보다 추가', extra: 200 },
+  blendRadish: { name: '다발무 · 믹서용', amount: 500, unit: 'g' },
   plum: { name: '매실청', amount: 300, unit: 'mL', cups: true },
   pear: { name: '배', amount: 1, unit: '개' },
   apple: { name: '사과', amount: 1, unit: '개' },
@@ -164,7 +164,6 @@ function renderRows(ids, kg, scope, items = ingredients) {
     if (factor && item.thin) measure.push(`가는 대파 ${amountText(item.thin * factor, item.unit)}`);
     if (factor && item.cups) measure.push(amountText(item.amount * factor / 200, '컵'));
     if (factor && item.bundles) measure.push(amountText(item.bundles * factor, '단'));
-    if (factor && item.extra) measure.push(`추가 ${amountText(item.extra * factor, 'g')} 포함`);
     const name = scope === 'shopping' ? item.name.split(' · ')[0] : item.name;
     const label = name + (item.hint ? `<small>${item.hint}</small>` : '');
     const guide = id === 'greens' ? '<button type="button" class="guide-button" data-greens-guide aria-haspopup="dialog" aria-controls="greens-guide">청갓·홍갓 설명</button>' : '';

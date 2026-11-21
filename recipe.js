@@ -4,7 +4,7 @@ const ingredients = {
   pollock: { name: '황태 대가리', amount: 3, unit: '개' },
   stockLeek: { name: '대파 · 육수용', amount: 1, unit: '대' },
   stockKelp: { name: '건다시마 · 육수용', amount: 30, unit: 'g' },
-  stockRadish: { name: '다발무 · 육수용', amount: 2, unit: '개' },
+  stockRadish: { name: '다발무 · 육수용', amount: 0.5, unit: '개' },
   riceFlour: { name: '습식 찹쌀가루', amount: 300, unit: 'g' },
   driedChili: { name: '건고추', amount: 250, unit: 'g' },
   garlic: { name: '마늘', amount: 400, unit: 'g' },
@@ -19,7 +19,7 @@ const ingredients = {
   fish: { name: '멸치액젓', amount: 500, unit: 'mL', cups: true },
   pepper: { name: '고춧가루', amount: 1000, unit: 'g' },
   salt: { name: '천일염 · 간 맞춤용', amount: 3, unit: '숟갈', hint: '선택 · 간을 보며 조금씩' },
-  radish: { name: '다발무 · 무채용', quantity: '원하는 만큼' },
+  radish: { name: '다발무 · 김칫소용', amount: 2, unit: '개', hint: '믹서용을 덜고 나머지는 무채로 사용' },
   greens: { name: '청갓', amount: 600, unit: 'g', bundles: 1 },
   scallions: { name: '쪽파', amount: 500, unit: 'g', bundles: 0.5 },
   seaweed: { name: '건청각', amount: 100, unit: 'g' },
@@ -45,10 +45,9 @@ const shoppingIngredients = {
   ...ingredients,
   stockRadish: {
     name: '다발무',
-    amount: ingredients.stockRadish.amount,
+    amount: ingredients.stockRadish.amount + ingredients.radish.amount,
     unit: '개',
-    extraWeight: ingredients.blendRadish.amount,
-    hint: '무채로 쓸 분량은 별도로 준비',
+    hint: '육수용과 김칫소용 합계',
   },
   stockOnion: { name: '양파', amount: ingredients.stockOnion.amount + ingredients.blendOnion.amount, unit: '개' },
   stockKelp: {
@@ -77,7 +76,7 @@ const steps = {
   ]],
   vegetables: ['무채와 채소 손질하기', null, vegetables, [
     '건청각을 물에 약 2시간 불립니다. 씻어 물기를 뺀 뒤 잘게 다집니다.',
-    '무채용 다발무를 준비했다면 채 썹니다. 청갓은 밑동과 누런 잎을 떼고 줄기 사이를 씻습니다. 물기를 뺀 뒤 3~4 cm 길이로 썹니다. 쪽파도 씻어 물기를 빼고 먹기 좋게 썹니다.',
+    '김칫소용 다발무에서 믹서에 갈 분량을 먼저 덜어 두고 나머지는 채 썹니다. 청갓은 밑동과 누런 잎을 떼고 줄기 사이를 씻습니다. 물기를 뺀 뒤 3~4 cm 길이로 썹니다. 쪽파도 씻어 물기를 빼고 먹기 좋게 썹니다.',
   ]],
   blend: ['건고추와 양념 갈기', 283, blend, [
     '건고추를 불리고 믹서용 다발무, 배, 사과, 양파를 썹니다.',
@@ -154,7 +153,6 @@ function renderRows(ids, kg, scope, items = ingredients) {
     const factor = kg / kilogramsPerBox;
     const amount = item.quantity ?? (factor ? scaledAmount(item, factor) : '—');
     const measure = [];
-    if (factor && item.extraWeight) measure.push(`믹서용 ${amountText(item.extraWeight * factor, 'g')} 별도`);
     if (factor && item.thin) measure.push(`가는 대파 ${amountText(item.thin * factor, item.unit)}`);
     if (factor && item.cups) measure.push(amountText(item.amount * factor / 200, '컵'));
     if (factor && item.bundles) measure.push(amountText(item.bundles * factor, '단'));

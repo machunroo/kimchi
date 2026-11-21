@@ -118,6 +118,7 @@ const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
 const boxInput = byId('box-count');
 const kilogramsPerBox = 20;
 const checklistKey = 'kimchi-seoul-checklist-v1';
+const boxCountKey = 'kimchi-seoul-box-count-v1';
 const checkedItems = loadChecklist();
 let dayIndex = 0;
 let stepPosition = 0;
@@ -270,5 +271,23 @@ byId('next').onclick = () => {
 document.addEventListener('click', ({ target }) => {
   if (target.closest('[data-greens-guide]')) byId('greens-guide').showModal();
 });
-boxInput.addEventListener('input', renderAmounts);
+try {
+  const savedBoxCount = localStorage.getItem(boxCountKey);
+  if (savedBoxCount !== null) {
+    boxInput.value = savedBoxCount;
+    if (!currentWeight()) boxInput.value = boxInput.defaultValue;
+  }
+} catch {
+  // Use the default count when storage is unavailable.
+}
+boxInput.addEventListener('input', () => {
+  if (currentWeight()) {
+    try {
+      localStorage.setItem(boxCountKey, boxInput.value);
+    } catch {
+      // Keep recalculating even when storage is unavailable.
+    }
+  }
+  renderAmounts();
+});
 renderAmounts();

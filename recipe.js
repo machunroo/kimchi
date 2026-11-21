@@ -1,12 +1,10 @@
 const ingredients = {
   cabbage: { name: '해남 절임배추', amount: 20, unit: 'kg' },
-  water: { name: '물 · 육수용', amount: 2, unit: 'L' },
-  stockRadish: { name: '무 · 육수용', amount: 0.5, unit: '개' },
-  stockOnion: { name: '양파 · 육수용', amount: 1, unit: '개' },
-  stockLeek: { name: '대파', amount: 1, unit: '대' },
-  herring: { name: '디포리', amount: 150, unit: 'g' },
+  water: { name: '물 · 육수용', range: [3, 4], unit: 'L' },
+  pollock: { name: '황태 대가리', amount: 3, unit: '개' },
+  stockLeek: { name: '굵은 대파 · 육수용', amount: 1, unit: '대', thin: 2 },
   stockKelp: { name: '건다시마 · 육수용', amount: 30, unit: 'g' },
-  shiitake: { name: '건표고버섯', amount: 50, unit: 'g' },
+  stockRadish: { name: '무 · 육수용', amount: 400, unit: 'g' },
   riceFlour: { name: '습식 찹쌀가루', amount: 300, unit: 'g' },
   driedChili: { name: '건고추', amount: 250, unit: 'g' },
   garlic: { name: '마늘', amount: 400, unit: 'g' },
@@ -29,7 +27,7 @@ const ingredients = {
   soju: { name: '소주 · 다시마 적심용', quantity: '적당량', hint: '선택' },
 };
 
-const stock = ['water', 'stockRadish', 'stockOnion', 'stockLeek', 'herring', 'stockKelp', 'shiitake'];
+const stock = ['water', 'pollock', 'stockLeek', 'stockKelp', 'stockRadish'];
 const blend = ['driedChili', 'garlic', 'ginger', 'shrimpPaste', 'blendRadish', 'plum', 'pear', 'apple', 'blendOnion', 'fish', 'fishPaste'];
 const vegetables = ['radish', 'greens', 'scallions', 'seaweed'];
 const cover = ['coverKelp', 'soju'];
@@ -43,12 +41,32 @@ const groups = [
   ['김치통 덮개', cover],
 ];
 
+const shoppingIngredients = {
+  ...ingredients,
+  stockRadish: {
+    name: '무',
+    amount: ingredients.radish.amount,
+    unit: '개',
+    weight: ingredients.stockRadish.amount + ingredients.blendRadish.amount,
+    extra: ingredients.blendRadish.extra,
+    hint: '무채용은 작은 무를 준비하세요',
+  },
+  stockKelp: {
+    name: '건다시마',
+    amount: ingredients.stockKelp.amount + ingredients.coverKelp.amount,
+    unit: 'g',
+  },
+};
+const combinedShoppingIds = new Set(['radish', 'blendRadish', 'coverKelp']);
+const shoppingIds = groups.flatMap(([, ids]) => ids).filter(id => !combinedShoppingIds.has(id));
+
 const videoUrl = 'https://youtu.be/BE4oP2FzDYA';
 const steps = {
-  stock: ['디포리 육수 끓이기', 159, stock, [
-    '표고버섯을 불려 두고 무, 양파, 대파를 손질합니다.',
-    '물에 육수 재료를 넣고 끓기 시작하면 30분 더 끓입니다. 체에 걸러 육수만 남깁니다.',
-  ]],
+  stock: ['황태·다시마 육수 끓이기', 62, stock, [
+    '냄비에 물, 황태 대가리, 대파, 다시마, 무를 넣습니다.',
+    '끓기 시작하면 중약불로 줄여 다시마를 포함한 모든 재료를 약 30분 우립니다.',
+    '불을 끄고 건더기를 체로 걸러 육수만 남깁니다.',
+  ], 'https://youtu.be/yCAmXF76lxs'],
   paste: ['찹쌀풀 쑤기', 246, ['riceFlour'], [
     '거른 육수에 습식 찹쌀가루를 풀고 센 불에서 저어 줍니다.',
     '걸쭉해지면 중불로 낮춰 약 5분 더 끓인 뒤 식힙니다.',
@@ -121,17 +139,27 @@ function amountText(value, unit) {
   return `${format.format(value)} ${unit}`;
 }
 
-function renderRows(ids, kg, scope) {
+function scaledAmount(item, factor) {
+  if (!item.range) return amountText(item.amount * factor, item.unit);
+
+  const [min, max] = item.range.map(value => value * factor);
+  return `${format.format(min)}~${amountText(max, item.unit)}`;
+}
+
+function renderRows(ids, kg, scope, items = ingredients) {
   if (!ids.length) return '';
   return '<dl>' + ids.map(id => {
-    const item = ingredients[id];
+    const item = items[id];
     const factor = kg / kilogramsPerBox;
-    const amount = item.quantity ?? (factor ? amountText(item.amount * factor, item.unit) : '—');
+    let amount = item.quantity ?? (factor ? scaledAmount(item, factor) : '—');
+    if (factor && item.weight) amount += ` + ${amountText(item.weight * factor, 'g')}`;
     const measure = [];
+    if (factor && item.thin) measure.push(`가는 대파 ${amountText(item.thin * factor, item.unit)}`);
     if (factor && item.cups) measure.push(amountText(item.amount * factor / 200, '컵'));
     if (factor && item.bundles) measure.push(amountText(item.bundles * factor, '단'));
     if (factor && item.extra) measure.push(`추가 ${amountText(item.extra * factor, 'g')} 포함`);
-    const label = item.name + (item.hint ? `<small>${item.hint}</small>` : '');
+    const name = scope === 'shopping' ? item.name.split(' · ')[0] : item.name;
+    const label = name + (item.hint ? `<small>${item.hint}</small>` : '');
     const guide = id === 'greens' ? '<button type="button" class="guide-button" data-greens-guide aria-haspopup="dialog" aria-controls="greens-guide">청갓·홍갓 설명</button>' : '';
     return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}${guide}</dt><dd>${amount}${measure.length ? `<small>${measure.join(" · ")}</small>` : ""}</dd></div>`;
   }).join('') + '</dl>';
@@ -145,11 +173,11 @@ function currentWeight() {
 function renderStep() {
   const { stepIds } = cookingDays[dayIndex];
   const stepId = stepIds[stepPosition];
-  const [title, seconds, ids, instructions] = steps[stepId];
+  const [title, seconds, ids, instructions, source = videoUrl] = steps[stepId];
   const scope = `cook:${stepId}`;
   const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
-  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}?t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
+  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${source}?t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {
     const id = button.dataset.stepId;
     button.hidden = !stepIds.includes(id);
@@ -182,7 +210,7 @@ function renderAmounts() {
   byId('weight-status').textContent = kg
     ? `총 ${amountText(kg, 'kg')}`
     : '0.01박스 이상 입력하세요';
-  byId('shopping-list').innerHTML = renderRows(groups.flatMap(([, ids]) => ids), kg, 'shopping');
+  byId('shopping-list').innerHTML = renderRows(shoppingIds, kg, 'shopping', shoppingIngredients);
   byId('ingredients').innerHTML = groups.map(([title, ids, stepId], index) => {
     const instructions = stepId ? steps[stepId][3] : [];
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');

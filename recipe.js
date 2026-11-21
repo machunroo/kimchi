@@ -4,7 +4,7 @@ const ingredients = {
   pollock: { name: '황태 대가리', amount: 3, unit: '개' },
   stockLeek: { name: '대파 · 육수용', amount: 1, unit: '대' },
   stockKelp: { name: '건다시마 · 육수용', amount: 30, unit: 'g' },
-  stockRadish: { name: '다발무 · 육수용', amount: 0.5, unit: '개' },
+  stockRadish: { name: '다발무 · 육수용', amount: 30, unit: 'g' },
   riceFlour: { name: '습식 찹쌀가루', amount: 300, unit: 'g' },
   garlic: { name: '마늘', amount: 400, unit: 'g' },
   ginger: { name: '생강', amount: 200, unit: 'g' },
@@ -44,9 +44,9 @@ const shoppingIngredients = {
   ...ingredients,
   stockRadish: {
     name: '다발무',
-    amount: ingredients.stockRadish.amount + ingredients.radish.amount,
+    amount: ingredients.radish.amount,
+    stockWeight: ingredients.stockRadish.amount,
     unit: '개',
-    hint: '육수용과 김칫소용 합계',
   },
   stockOnion: { name: '양파', amount: ingredients.stockOnion.amount + ingredients.blendOnion.amount, unit: '개' },
   stockKelp: {
@@ -157,6 +157,7 @@ function renderRows(ids, kg, scope, items = ingredients) {
     const factor = kg / kilogramsPerBox;
     const amount = item.quantity ?? (factor ? scaledAmount(item, factor) : '—');
     const measure = [];
+    if (factor && item.stockWeight) measure.push(`육수용 ${amountText(item.stockWeight * factor, 'g')} 추가`);
     if (factor && item.thin) measure.push(`가는 대파 ${amountText(item.thin * factor, item.unit)}`);
     if (factor && item.cups) measure.push(amountText(item.amount * factor / 200, '컵'));
     if (factor && item.bundles) measure.push(amountText(item.bundles * factor, '단'));

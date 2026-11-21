@@ -122,7 +122,31 @@ const totals = {
 };
 const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
 const weightInput = byId('weight');
+const checklistKey = 'kimchi-checklist-v1';
+const checkedItems = loadChecklist();
 let stepIndex = 0;
+
+function loadChecklist() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(checklistKey));
+    if (Array.isArray(saved)) return new Set(saved);
+  } catch {
+    // The checklist still works for this visit when storage is unavailable.
+  }
+  return new Set();
+}
+
+function saveChecklist() {
+  try {
+    localStorage.setItem(checklistKey, JSON.stringify([...checkedItems]));
+  } catch {
+    // Keep the current checklist usable in memory.
+  }
+}
+
+function checkItem(key, label) {
+  return `<label class="check-item"><input type="checkbox" data-check="${key}"${checkedItems.has(key) ? ' checked' : ''}><span>${label}</span></label>`;
+}
 
 function amountText(value, unit) {
   if (unit === 'g' && value >= 1000) {
@@ -156,7 +180,7 @@ function ingredientHint(id, factor) {
   }
 }
 
-function renderRows(ids, kg) {
+function renderRows(ids, kg, scope) {
   if (!ids.length) return '';
   return '<dl>' + ids.map(id => {
     const item = ingredients[id] ?? totals[id];
@@ -169,7 +193,8 @@ function renderRows(ids, kg) {
     const spoons = showVolume && item.unit !== '큰술'
       ? ' · ' + amountText(item.ml * factor / 15, '큰술') : '';
     const hint = kg ? ingredientHint(id, factor) : '';
-    return `<div class="row"><dt>${item.name}${hint ? `<small>${hint}</small>` : ''}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
+    const label = `${item.name}${hint ? `<small>${hint}</small>` : ''}`;
+    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
   }).join('') + '</dl>';
 }
 
@@ -180,10 +205,11 @@ function currentWeight() {
 
 function renderStep() {
   const [title, description, ids, sources = [], instructions = []] = steps[stepIndex];
-  const instructionList = instructions.map(line => `<li>${line}</li>`).join('');
+  const scope = `cook:${stepIndex}`;
+  const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
   const sourceLinks = sources.map(([label, url]) => `<li><a href="${url}">${label}</a></li>`).join('');
   byId('step-count').textContent = `${stepIndex + 1} / ${steps.length} 단계`;
-  byId('step').innerHTML = `<h3>${title}</h3><p>${description}</p>${renderRows(ids, currentWeight())}${instructionList ? `<ol>${instructionList}</ol>` : ''}${sourceLinks ? `<ul>${sourceLinks}</ul>` : ''}`;
+  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3><p>${description}</p>${renderRows(ids, currentWeight(), scope)}${instructionList ? `<ol>${instructionList}</ol>` : ''}${sourceLinks ? `<ul>${sourceLinks}</ul>` : ''}`;
   Array.from(byId('step-list').children).forEach((button, index) => {
     button.setAttribute('aria-pressed', index === stepIndex);
   });
@@ -206,9 +232,9 @@ function renderAmounts() {
   byId('weight-status').textContent = !kg ? '0.1 kg 이상 입력하세요'
     : kg === 20 ? '20 kg 원본 계량'
     : kg < 20 || kg > 235 ? '표 범위 밖 · 비례 추정' : '중량별 계량 적용';
-  byId('shopping-list').innerHTML = renderRows(shoppingIngredients, kg);
-  byId('ingredients').innerHTML = groups.map(([title, ids]) =>
-    `<article><h3>${title}</h3>${renderRows(ids, kg)}</article>`).join('');
+  byId('shopping-list').innerHTML = renderRows(shoppingIngredients, kg, 'shopping');
+  byId('ingredients').innerHTML = groups.map(([title, ids], index) =>
+    `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}</article>`).join('');
   renderStep();
 }
 
@@ -221,6 +247,20 @@ steps.forEach(([title], index) => {
   byId('step-list').append(button);
 });
 for (const [tab, panel] of sections) byId(tab).onclick = () => showSection(panel);
+document.addEventListener('change', ({ target }) => {
+  const key = target.dataset?.check;
+  if (!key) return;
+  if (target.checked) checkedItems.add(key);
+  else checkedItems.delete(key);
+  saveChecklist();
+});
+byId('restart').onclick = () => {
+  checkedItems.clear();
+  saveChecklist();
+  stepIndex = 0;
+  renderAmounts();
+  showSection('shopping', true);
+};
 byId('start').onclick = () => showSection('cook', true);
 byId('prev').onclick = () => { stepIndex -= 1; renderStep(); };
 byId('next').onclick = () => {

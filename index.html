@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리집 김장 | 김장 레시피</title>
-<link rel="stylesheet" href="./style.css">
-<script defer src="./recipe.js?v=three-tabs"></script>
+<link rel="stylesheet" href="./style.css?v=checklist">
+<script defer src="./recipe.js?v=checklist"></script>
 </head>
 <body>
 <main>
@@ -21,6 +21,7 @@
     <button id="ingredients-tab" aria-pressed="true" aria-controls="shopping">재료</button>
     <button id="prep-tab" aria-pressed="false" aria-controls="prep">준비</button>
     <button id="cook-tab" aria-pressed="false" aria-controls="cook">조리</button>
+    <button type="button" id="restart">다시 시작하기</button>
   </nav>
   <section id="shopping" aria-labelledby="shopping-title">
     <div class="intro"><h2 id="shopping-title" tabindex="-1">김장 재료 전체</h2><p>장보기에 필요한 총량입니다. 종이컵은 180 mL, 큰술은 15 mL 기준입니다.</p></div>

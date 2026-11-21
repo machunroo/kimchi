@@ -15,8 +15,7 @@ const ingredients = {
   pear: { name: '배', amount: 1, unit: '개' },
   apple: { name: '사과', amount: 1, unit: '개' },
   blendOnion: { name: '양파 · 믹서용', amount: 1, unit: '개' },
-  fish: { name: '멸치액젓', amount: 400, unit: 'mL', cups: true },
-  fishPaste: { name: '멸치진젓', amount: 200, unit: 'mL', cups: true },
+  fish: { name: '멸치액젓', amount: 500, unit: 'mL', cups: true },
   pepper: { name: '고춧가루', amount: 1000, unit: 'g' },
   salt: { name: '천일염 · 간 맞춤용', amount: 3, unit: '숟갈', hint: '선택 · 간을 보며 조금씩' },
   radish: { name: '다발무 · 무채용', quantity: '남은 분량' },
@@ -28,7 +27,7 @@ const ingredients = {
 };
 
 const stock = ['water', 'pollock', 'stockLeek', 'stockKelp', 'stockRadish'];
-const blend = ['driedChili', 'garlic', 'ginger', 'shrimpPaste', 'blendRadish', 'plum', 'pear', 'apple', 'blendOnion', 'fish', 'fishPaste'];
+const blend = ['driedChili', 'garlic', 'ginger', 'shrimpPaste', 'blendRadish', 'plum', 'pear', 'apple', 'blendOnion', 'fish'];
 const vegetables = ['radish', 'greens', 'scallions', 'seaweed'];
 const cover = ['coverKelp', 'soju'];
 
@@ -78,11 +77,11 @@ const steps = {
   ]],
   blend: ['건고추와 양념 갈기', 283, blend, [
     '건고추를 불리고 믹서용 다발무, 배, 사과, 양파를 썹니다.',
-    '건고추와 믹서용 재료를 식힌 찹쌀풀과 나누어 갈아 큰 볼에 모읍니다.',
+    '멸치액젓은 일부 남겨 두고, 건고추와 나머지 믹서용 재료를 식힌 찹쌀풀과 나누어 갈아 큰 볼에 모읍니다.',
   ]],
   filling: ['김칫소 버무리기', 375, ['pepper', 'salt', ...vegetables], [
     '갈아 둔 양념에 고춧가루를 섞습니다.',
-    '무채, 청갓, 쪽파, 청각을 넣고 버무립니다. 절임배추와 함께 맛보고 필요하면 천일염으로 간을 맞춥니다.',
+    '무채, 청갓, 쪽파, 청각을 넣고 버무립니다. 절임배추와 함께 맛보고 남겨 둔 멸치액젓으로 간을 맞춥니다. 그래도 싱거우면 천일염을 조금씩 넣습니다.',
   ]],
   pack: ['배추에 속을 넣어 담기', 504, [], [
     '배춧잎 사이에 김칫소를 골고루 바르고 겉잎으로 감싸 김치통에 담습니다.',

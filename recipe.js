@@ -5,7 +5,7 @@ const ingredients = {
   stockLeek: { name: '대파', amount: 1, unit: '대' },
   stockKelp: { name: '건다시마', amount: 30, unit: 'g' },
   stockRadish: { name: '다발무', amount: 30, unit: 'g' },
-  riceFlour: { name: '습식 찹쌀가루', amount: 300, unit: 'g' },
+  riceFlour: { name: '찹쌀가루', amount: 300, unit: 'g' },
   garlic: { name: '마늘', amount: 400, unit: 'g' },
   ginger: { name: '생강', amount: 200, unit: 'g' },
   shrimpPaste: { name: '새우젓', amount: 250, unit: 'g' },
@@ -70,7 +70,7 @@ const steps = {
   ]],
   paste: ['육수로 찹쌀풀 쑤기', 246, ['riceFlour'], [
     '건더기를 거른 육수는 반드시 완전히 식힙니다. 급하면 육수 용기를 얼음물에 받쳐 식힙니다.',
-    '식힌 육수에 습식 찹쌀가루를 넣고 거품기나 숟가락으로 덩어리 없이 풉니다.',
+    '식힌 육수에 찹쌀가루를 넣고 거품기나 숟가락으로 덩어리 없이 풉니다.',
     '중약불에서 냄비 바닥까지 계속 저으며 끓입니다. 윤기가 돌고 걸쭉해지면서 기포가 올라오면 불을 끕니다.',
     '찹쌀풀을 완전히 식힌 뒤 믹서 양념에 넣습니다.',
   ]],

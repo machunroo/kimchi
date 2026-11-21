@@ -30,6 +30,10 @@ const ingredients = {
   greens: { name: '홍갓', amount: 400, unit: 'g' },
   scallions: { name: '쪽파', amount: 200, unit: 'g', key: 'scallions' },
   stock: { name: '멸치다시마육수', amount: 1300, unit: 'mL', ml: 1300 },
+  stockWater: { name: '물', amount: 4200, unit: 'mL' },
+  stockAnchovy: { name: '국물용 마른 멸치', amount: 42, unit: '마리' },
+  stockKelp: { name: '다시마', amount: 6, unit: '조각' },
+  stockLeek: { name: '대파', amount: 1.5, unit: '대' },
   flour: { name: '찹쌀가루', amount: 90, unit: 'g', key: 'flour', ml: 7 * 15 },
   pear: { name: '배', amount: 250, unit: 'g' },
   apple: { name: '사과', amount: 100, unit: 'g' },
@@ -111,8 +115,15 @@ const steps = [
 
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
+const stockIngredients = ['stockWater', 'stockAnchovy', 'stockKelp', 'stockLeek'];
+const stockInstructions = [
+  '냄비에 물과 국물용 멸치, 다시마, 대파를 넣고 센불로 끓입니다. 멸치 비린내가 강하면 머리와 내장을 떼고 사용하세요.',
+  '끓기 시작하면 중불로 줄이고, 뚜껑을 열어 약 10분 끓입니다.',
+  '고운 체로 건더기를 거른 뒤 육수를 식힙니다.',
+  '아래에 표시된 완성 육수 필요량을 계량해 찹쌀풀용과 믹서용으로 나눕니다. 냄비와 불 세기에 따라 완성량이 달라지므로 계량컵으로 확인하세요.',
+];
 const shoppingIngredients = [
-  'cabbage', 'radishTotal', 'greens', 'scallions', 'stockTotal', 'flour',
+  'cabbage', 'radishTotal', 'greens', 'scallions', 'stockTotal', ...stockIngredients, 'flour',
   'pear', 'apple', 'leek', 'onion', 'shrimp', 'fresh', 'garlic', 'ginger',
   'fish', 'pepper', 'plum', 'salt',
 ];
@@ -171,6 +182,8 @@ function ingredientHint(id, factor) {
     }
     case 'stock':
       return `원본 육수 계량 기준 약 ${amountText(ingredients.stock.amount * factor, 'g')}`;
+    case 'stockKelp':
+      return '한 조각 약 10 × 10 cm';
     case 'pear':
     case 'apple':
       return `약 ${amountText(0.5 * factor, '개')} · 무게로 계량`;
@@ -195,7 +208,8 @@ function renderRows(ids, kg, scope) {
       ? ' · ' + amountText(item.ml * factor / 15, '큰술') : '';
     const hint = kg ? ingredientHint(id, factor) : '';
     const label = `${item.name}${hint ? `<small>${hint}</small>` : ''}`;
-    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
+    const nested = scope === 'shopping' && stockIngredients.includes(id) ? ' stock-ingredient' : '';
+    return `<div class="row${nested}"><dt>${checkItem(`${scope}:${id}`, label)}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
   }).join('') + '</dl>';
 }
 
@@ -235,7 +249,15 @@ function renderAmounts() {
     ? `총 ${amountText(kg, 'kg')}${estimate}`
     : '0.01박스 이상 입력하세요';
   byId('shopping-list').innerHTML = renderRows(shoppingIngredients, kg, 'shopping');
-  byId('ingredients').innerHTML = groups.map(([title, ids], index) =>
+  const stockSteps = stockInstructions.map((line, index) =>
+    `<li>${checkItem(`prep:stock:instruction:${index}`, line)}</li>`).join('');
+  const stockCard = `<article><h3>멸치다시마육수 만들기</h3>
+    <p>김진옥의 기본 육수 배합을 1컵을 200 mL로 잡아 3배로 환산해, 김장에 필요한 양보다 조금 넉넉하게 끓이는 기준입니다.</p>
+    ${renderRows(stockIngredients, kg, 'prep:stock')}
+    <ol>${stockSteps}</ol>
+    ${renderRows(['stockTotal'], kg, 'prep:stock')}
+    <p><a href="https://hls3790.tistory.com/800">김진옥의 기본 멸치다시마육수</a></p></article>`;
+  byId('ingredients').innerHTML = stockCard + groups.map(([title, ids], index) =>
     `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}</article>`).join('');
   renderStep();
 }

@@ -6,6 +6,7 @@ const ingredients = {
   stockKelp: { name: '건다시마 · 육수용', amount: 30, unit: 'g' },
   stockRadish: { name: '다발무 · 육수용', amount: 0.5, unit: '개' },
   riceFlour: { name: '습식 찹쌀가루', amount: 300, unit: 'g' },
+  chiliWater: { name: '물 · 건고추 불리기용', amount: 400, unit: 'mL', cups: true },
   driedChili: { name: '건고추', amount: 250, unit: 'g' },
   garlic: { name: '마늘', amount: 400, unit: 'g' },
   ginger: { name: '생강', amount: 200, unit: 'g' },
@@ -28,12 +29,12 @@ const ingredients = {
 };
 
 const stock = ['water', 'stockRadish', 'stockOnion', 'stockLeek', 'stockKelp', 'pollock'];
-const blend = ['driedChili', 'garlic', 'ginger', 'shrimpPaste', 'blendRadish', 'plum', 'pear', 'apple', 'blendOnion', 'fish'];
+const blend = ['driedChili', 'chiliWater', 'garlic', 'ginger', 'shrimpPaste', 'blendRadish', 'plum', 'pear', 'apple', 'blendOnion', 'fish'];
 const vegetables = ['radish', 'greens', 'scallions', 'seaweed'];
 const cover = ['coverKelp', 'soju'];
 
 const groups = [
-  ['배추 준비', ['cabbage']],
+  ['배추 준비', ['cabbage'], 'turn'],
   ['육수', stock, 'stock'],
   ['찹쌀풀', ['riceFlour'], 'paste'],
   ['믹서에 갈 재료', blend],
@@ -43,6 +44,7 @@ const groups = [
 
 const shoppingIngredients = {
   ...ingredients,
+  water: { name: '물', amount: ingredients.water.amount + ingredients.chiliWater.amount / 1000, unit: 'L', hint: '육수용과 건고추 불리기용 합계' },
   stockRadish: {
     name: '다발무',
     amount: ingredients.stockRadish.amount + ingredients.radish.amount,
@@ -56,11 +58,14 @@ const shoppingIngredients = {
     unit: 'g',
   },
 };
-const combinedShoppingIds = new Set(['radish', 'blendRadish', 'blendOnion', 'coverKelp']);
+const combinedShoppingIds = new Set(['chiliWater', 'radish', 'blendRadish', 'blendOnion', 'coverKelp']);
 const shoppingIds = groups.flatMap(([, ids]) => ids).filter(id => !combinedShoppingIds.has(id));
 
 const videoUrl = 'https://youtu.be/BE4oP2FzDYA';
 const steps = {
+  turn: ['전날 절임배추 상자 뒤집기', 13, ['cabbage'], [
+    '김장 전날 절임배추를 받으면 냉장 또는 충분히 서늘한 곳에 두고, 상자를 뒤집어 절임물이 고루 닿게 합니다.',
+  ]],
   stock: ['황태·다시마 육수 끓이기', 159, stock, [
     '냄비에 물, 다발무, 양파, 대파, 다시마, 황태 대가리를 넣습니다.',
     '끓기 시작하면 중약불로 줄여 다시마를 포함한 모든 재료를 약 30분 우립니다.',
@@ -72,30 +77,32 @@ const steps = {
     '걸쭉해지면 중불로 낮춰 약 5분 더 저어 끓입니다. 완전히 식힌 뒤 믹서 양념에 넣습니다.',
   ]],
   drain: ['절임배추 물 빼기', 86, ['cabbage'], [
-    '절임배추를 엎어 약 1시간 물기를 뺍니다.',
+    '김장 당일 절임배추를 채반에 엎어 약 1시간 물기를 뺍니다.',
   ]],
   vegetables: ['무채와 채소 손질하기', null, vegetables, [
-    '건청각을 물에 약 2시간 불립니다. 씻어 물기를 뺀 뒤 잘게 다집니다.',
+    '건청각은 삶지 않고 물에 약 2시간 불립니다. 조개껍데기 등 이물질을 골라내고 씻은 다음, 물기를 빼고 잘게 다집니다.',
     '김칫소용 다발무에서 믹서에 갈 분량을 먼저 덜어 두고 나머지는 채 썹니다. 청갓은 밑동과 누런 잎을 떼고 줄기 사이를 씻습니다. 물기를 뺀 뒤 3~4 cm 길이로 썹니다. 쪽파도 씻어 물기를 빼고 먹기 좋게 썹니다.',
   ]],
   blend: ['건고추와 양념 갈기', 283, blend, [
-    '건고추를 불리고 믹서용 다발무, 배, 사과, 양파를 썹니다.',
-    '멸치액젓은 일부 남겨 두고, 건고추와 나머지 믹서용 재료를 식힌 찹쌀풀과 나누어 갈아 큰 볼에 모읍니다.',
+    '건고추를 씻어 자르고, 계량한 물을 부어 30분 불립니다.',
+    '불린 건고추에 마늘, 생강, 새우젓, 매실청, 식힌 찹쌀풀을 섞습니다. 멸치액젓은 마지막 간을 위해 일부 남깁니다.',
+    '썰어 둔 배, 사과, 양파, 믹서용 다발무를 건고추 양념과 함께 여러 번에 나눠 갈아 한데 모읍니다.',
   ]],
   filling: ['김칫소 버무리기', 375, ['pepper', 'salt', ...vegetables], [
     '갈아 둔 양념에 고춧가루를 섞습니다.',
     '무채, 청갓, 쪽파, 청각을 넣고 버무립니다. 절임배추와 함께 맛보고 남겨 둔 멸치액젓으로 간을 맞춥니다. 그래도 싱거우면 천일염을 조금씩 넣습니다.',
   ]],
   pack: ['배추에 속을 넣어 담기', 504, [], [
-    '배춧잎 사이에 김칫소를 골고루 바르고 겉잎으로 감싸 김치통에 담습니다.',
+    '푸른 겉잎을 아래로 펴고, 잎을 한 장씩 넘기며 줄기 안쪽까지 김칫소를 바릅니다. 처음부터 많이 바르지 말고 남은 배추 양에 맞춰 나눠 씁니다.',
+    '안쪽 노란 잎에는 양념을 가볍게 묻힙니다. 잎을 가운데로 모아 푸른 겉잎으로 감싼 뒤 김치통에 담습니다.',
   ]],
   store: ['김치통 덮고 보관하기', 642, cover, [
     '영상에서는 김치 위를 건다시마로 덮습니다. 소주에 살짝 적시는 과정은 선택입니다.',
-    '뚜껑을 닫아 냉장 보관합니다.',
+    '뚜껑을 닫고 김치냉장고에 넣습니다.',
   ]],
 };
 const cookingDays = [
-  { tab: 'day-before', stepIds: ['stock', 'paste'] },
+  { tab: 'day-before', stepIds: ['turn', 'stock', 'paste'] },
   { tab: 'day-of', stepIds: ['drain', 'vegetables', 'blend', 'filling', 'pack', 'store'] },
 ];
 const byId = id => document.getElementById(id);

@@ -110,6 +110,16 @@ const steps = [
 ];
 
 const byId = id => document.getElementById(id);
+const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
+const shoppingIngredients = [
+  'cabbage', 'radishTotal', 'greens', 'scallions', 'stockTotal', 'flour',
+  'pear', 'apple', 'leek', 'onion', 'shrimp', 'fresh', 'garlic', 'ginger',
+  'fish', 'pepper', 'plum', 'salt',
+];
+const totals = {
+  radishTotal: { ...ingredients.sliced, name: '무', amount: ingredients.sliced.amount + ingredients.blended.amount },
+  stockTotal: { ...ingredients.stock, amount: ingredients.stock.amount * 2, ml: ingredients.stock.ml * 2 },
+};
 const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
 const weightInput = byId('weight');
 let stepIndex = 0;
@@ -122,10 +132,34 @@ function amountText(value, unit) {
   return `${format.format(value)} ${unit}`;
 }
 
+function ingredientHint(id, factor) {
+  switch (id) {
+    case 'cabbage':
+      return `약 ${amountText(factor, '상자')} · ${format.format(7 * factor)}~${amountText(9 * factor, '포기')}`;
+    case 'sliced':
+      return `큰 무 약 ${amountText(factor, '개')} · 채 썰기용`;
+    case 'radishTotal':
+      return `채 썰기용 ${amountText(ingredients.sliced.amount * factor, 'g')} · 믹서용 ${amountText(ingredients.blended.amount * factor, 'g')}`;
+    case 'stockTotal': {
+      const portion = amountText(ingredients.stock.amount * factor, 'mL');
+      return `찹쌀풀용 ${portion} · 믹서용 ${portion}`;
+    }
+    case 'stock':
+      return `원본 육수 계량 기준 약 ${amountText(ingredients.stock.amount * factor, 'g')}`;
+    case 'pear':
+    case 'apple':
+      return `약 ${amountText(0.5 * factor, '개')} · 무게로 계량`;
+    case 'salt':
+      return '버무린 뒤 마지막 간 조절용';
+    default:
+      return '';
+  }
+}
+
 function renderRows(ids, kg) {
   if (!ids.length) return '';
   return '<dl>' + ids.map(id => {
-    const item = ingredients[id];
+    const item = ingredients[id] ?? totals[id];
     const factor = kg ? multiplier(kg, item.key) : 0;
     const amount = item.note ?? (kg ? amountText(item.amount * factor, item.unit) : '—');
     const showVolume = kg && item.ml;
@@ -134,7 +168,8 @@ function renderRows(ids, kg) {
     const cups = showVolume ? '약 ' + amountText(item.ml * factor / 180, '종이컵') : '';
     const spoons = showVolume && item.unit !== '큰술'
       ? ' · ' + amountText(item.ml * factor / 15, '큰술') : '';
-    return `<div class="row"><dt>${item.name}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
+    const hint = kg ? ingredientHint(id, factor) : '';
+    return `<div class="row"><dt>${item.name}${hint ? `<small>${hint}</small>` : ''}</dt><dd>${amount}${milliliters}${showVolume ? `<small>${cups}${spoons}</small>` : ''}</dd></div>`;
   }).join('') + '</dl>';
 }
 
@@ -156,12 +191,13 @@ function renderStep() {
   byId('next').textContent = stepIndex === steps.length - 1 ? '준비로 돌아가기' : '다음';
 }
 
-function showSection(cooking, focusTitle = false) {
-  byId('prep').hidden = cooking;
-  byId('cook').hidden = !cooking;
-  byId('prep-tab').setAttribute('aria-pressed', !cooking);
-  byId('cook-tab').setAttribute('aria-pressed', cooking);
-  if (focusTitle) byId(cooking ? 'cook-title' : 'prep-title').focus();
+function showSection(section, focusTitle = false) {
+  for (const [tab, panel] of sections) {
+    const active = panel === section;
+    byId(panel).hidden = !active;
+    byId(tab).setAttribute('aria-pressed', active);
+  }
+  if (focusTitle) byId(`${section}-title`).focus();
 }
 
 function renderAmounts() {
@@ -170,6 +206,7 @@ function renderAmounts() {
   byId('weight-status').textContent = !kg ? '0.1 kg 이상 입력하세요'
     : kg === 20 ? '20 kg 원본 계량'
     : kg < 20 || kg > 235 ? '표 범위 밖 · 비례 추정' : '중량별 계량 적용';
+  byId('shopping-list').innerHTML = renderRows(shoppingIngredients, kg);
   byId('ingredients').innerHTML = groups.map(([title, ids]) =>
     `<article><h3>${title}</h3>${renderRows(ids, kg)}</article>`).join('');
   renderStep();
@@ -183,12 +220,11 @@ steps.forEach(([title], index) => {
   button.onclick = () => { stepIndex = index; renderStep(); };
   byId('step-list').append(button);
 });
-byId('prep-tab').onclick = () => showSection(false);
-byId('cook-tab').onclick = () => showSection(true);
-byId('start').onclick = () => showSection(true, true);
+for (const [tab, panel] of sections) byId(tab).onclick = () => showSection(panel);
+byId('start').onclick = () => showSection('cook', true);
 byId('prev').onclick = () => { stepIndex -= 1; renderStep(); };
 byId('next').onclick = () => {
-  if (stepIndex === steps.length - 1) showSection(false, true);
+  if (stepIndex === steps.length - 1) showSection('prep', true);
   else { stepIndex += 1; renderStep(); }
 };
 weightInput.addEventListener('input', renderAmounts);

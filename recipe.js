@@ -59,6 +59,8 @@ const combinedShoppingIds = new Set(['radish', 'blendRadish', 'blendOnion', 'cov
 const shoppingIds = groups.flatMap(([, ids]) => ids).filter(id => !combinedShoppingIds.has(id));
 
 const videoUrl = 'https://youtu.be/BE4oP2FzDYA';
+const pasteNotice = '<p><strong>주의사항</strong> · 반드시 육수를 완전히 식힌 상태에서 사용할 것</p>';
+
 const steps = {
   turn: ['전날 절임배추 상자 뒤집기', 13, ['cabbage'], [
     '김장 전날 절임배추를 받으면 냉장 또는 충분히 서늘한 곳에 두고, 상자를 뒤집어 절임물이 고루 닿게 합니다.',
@@ -181,7 +183,7 @@ function renderStep() {
   const scope = `cook:${stepId}`;
   const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
-  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${source}?t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
+  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}${stepId === 'paste' ? pasteNotice : ''}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${source}?t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {
     const id = button.dataset.stepId;
     button.hidden = !stepIds.includes(id);
@@ -218,7 +220,7 @@ function renderAmounts() {
   byId('ingredients').innerHTML = groups.map(([title, ids, stepId], index) => {
     const instructions = stepId ? steps[stepId][3] : [];
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
-    return `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}${list ? `<ol>${list}</ol>` : ''}</article>`;
+    return `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}${stepId === 'paste' ? pasteNotice : ''}${list ? `<ol>${list}</ol>` : ''}</article>`;
   }).join('');
   renderStep();
 }

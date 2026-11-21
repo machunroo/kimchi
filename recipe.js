@@ -30,10 +30,11 @@ const ingredients = {
   greens: { name: '홍갓', amount: 400, unit: 'g' },
   scallions: { name: '쪽파', amount: 200, unit: 'g', key: 'scallions' },
   stock: { name: '멸치다시마육수', amount: 1300, unit: 'mL', ml: 1300 },
-  stockWater: { name: '물', amount: 4200, unit: 'mL' },
-  stockAnchovy: { name: '국물용 마른 멸치', amount: 42, unit: '마리' },
-  stockKelp: { name: '다시마', amount: 6, unit: '조각' },
-  stockLeek: { name: '대파', amount: 1.5, unit: '대' },
+  stockWater: { name: '물', amount: 7500, unit: 'mL' },
+  stockAnchovy: { name: '국물용 마른 멸치(대멸)', range: [75, 112.5], unit: '마리' },
+  stockKelp: { name: '다시마', amount: 15, unit: '장' },
+  stockOnion: { name: '양파 · 육수용', amount: 1.875, unit: '개' },
+  stockPeel: { name: '사과 껍질 또는 배 껍질', amount: 3.75, unit: '개분' },
   flour: { name: '찹쌀가루', amount: 90, unit: 'g', key: 'flour', ml: 7 * 15 },
   pear: { name: '배', amount: 250, unit: 'g' },
   apple: { name: '사과', amount: 100, unit: 'g' },
@@ -115,19 +116,21 @@ const cookingSteps = [
 
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
-const stockIngredients = ['stockWater', 'stockAnchovy', 'stockKelp', 'stockLeek'];
+const stockIngredients = ['stockWater', 'stockAnchovy', 'stockKelp', 'stockOnion', 'stockPeel'];
+const stockSource = ['맛따라삼만리 · 김치용 멸치다시마육수', 'https://www.10000recipe.com/recipe/6877888'];
+const stockNote = '원본은 물 1,000 mL에서 육수 약 360 mL를 얻었습니다. 필요량을 확보하도록 절임배추 1박스당 원본 배합의 7.5배로 잡았습니다. 냄비와 불 세기에 따라 완성량은 달라집니다.';
 const stockInstructions = [
-  '냄비에 물과 국물용 멸치, 다시마, 대파를 넣고 센불로 끓입니다. 멸치 비린내가 강하면 머리와 내장을 떼고 사용하세요.',
-  '끓기 시작하면 중불로 줄이고, 뚜껑을 열어 약 10분 끓입니다.',
-  '고운 체로 건더기를 거른 뒤 육수를 식힙니다.',
-  '아래에 표시된 완성 육수 필요량을 계량해 찹쌀풀용과 믹서용으로 나눕니다. 냄비와 불 세기에 따라 완성량이 달라지므로 계량컵으로 확인하세요.',
+  '대멸은 내장과 비늘을 덜어내고 냄비에서 먼저 살짝 볶습니다. 깨끗이 씻은 사과나 배의 껍질 중 한 종류를 준비합니다.',
+  '볶은 멸치에 물, 다시마, 양파, 과일 껍질을 넣고 중불로 끓입니다. 약 20분 즈음 국물 맛을 확인합니다.',
+  '다시마를 그대로 둔 채 양파가 푹 부드러워질 때까지 중불로 더 끓입니다. 원본에 걸린 시간은 총 약 40분입니다.',
+  '건더기를 체에 걸러 육수를 식힌 뒤, 표시된 완성 육수 필요량을 계량해 찹쌀풀용과 믹서용으로 반씩 나눕니다.',
 ];
 const steps = [
   [
     '멸치다시마육수 만들기',
-    '멸치와 다시마로 육수를 끓여 식힌 뒤, 찹쌀풀용과 믹서용으로 반씩 나눕니다. 물은 끓이기 전 분량이고, 완성 육수는 걸러서 실제로 사용할 분량입니다.',
+    stockNote,
     [...stockIngredients, 'stockTotal'],
-    [['김진옥의 기본 멸치다시마육수', 'https://hls3790.tistory.com/800']],
+    [stockSource],
     stockInstructions,
   ],
   ...cookingSteps,
@@ -197,9 +200,9 @@ function ingredientHint(id, factor) {
     case 'stockAnchovy':
       return '육수용 큰 마른 멸치';
     case 'stockKelp':
-      return '마른 다시마 · 한 조각 약 10 × 10 cm';
-    case 'stockLeek':
-      return '육수에 넣고 끓인 뒤 건지는 대파';
+      return '마른 다시마 · 한 장 약 5 × 5 cm';
+    case 'stockPeel':
+      return '사과나 배 중 한 종류';
     case 'pear':
     case 'apple':
       return `약 ${amountText(0.5 * factor, '개')} · 무게로 계량`;
@@ -215,7 +218,7 @@ function renderRows(ids, kg, scope) {
   return '<dl>' + ids.map(id => {
     const item = ingredients[id] ?? totals[id];
     const factor = kg ? multiplier(kg, item.key) : 0;
-    const amount = item.note ?? (kg ? amountText(item.amount * factor, item.unit) : '—');
+    const amount = item.note ?? (kg ? scaledAmount(item, factor) : '—');
     const showVolume = kg && item.ml;
     const milliliters = showVolume && item.showMilliliters
       ? ` · 약 ${amountText(item.ml * factor, 'mL')}` : '';
@@ -229,6 +232,12 @@ function renderRows(ids, kg, scope) {
   }).join('') + '</dl>';
 }
 
+function scaledAmount(item, factor) {
+  if (!item.range) return amountText(item.amount * factor, item.unit);
+  const [min, max] = item.range.map(value => Math.max(1, Math.round(value * factor)));
+  return min === max ? amountText(min, item.unit) : `${format.format(min)}~${amountText(max, item.unit)}`;
+}
+
 function currentWeight() {
   const kg = boxInput.valueAsNumber * kilogramsPerBox;
   return boxInput.validity.valid && Number.isFinite(kg) ? kg : null;
@@ -236,7 +245,7 @@ function currentWeight() {
 
 function renderStep() {
   const [title, description, ids, sources = [], instructions = []] = steps[stepIndex];
-  const scope = stepIndex === 0 ? 'cook:stock' : `cook:${stepIndex - 1}`;
+  const scope = stepIndex === 0 ? 'cook:kimchi-stock' : `cook:${stepIndex - 1}`;
   const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
   const sourceLinks = sources.map(([label, url]) => `<li><a href="${url}">${label}</a></li>`).join('');
   byId('step-count').textContent = `${stepIndex + 1} / ${steps.length} 단계`;
@@ -266,13 +275,13 @@ function renderAmounts() {
     : '0.01박스 이상 입력하세요';
   byId('shopping-list').innerHTML = renderRows(shoppingIngredients, kg, 'shopping');
   const stockSteps = stockInstructions.map((line, index) =>
-    `<li>${checkItem(`prep:stock:instruction:${index}`, line)}</li>`).join('');
+    `<li>${checkItem(`prep:kimchi-stock:instruction:${index}`, line)}</li>`).join('');
   const stockCard = `<article><h3>멸치다시마육수 만들기</h3>
-    <p>김진옥의 기본 육수 배합을 1컵을 200 mL로 잡아 3배로 환산해, 김장에 필요한 양보다 조금 넉넉하게 끓이는 기준입니다.</p>
-    ${renderRows(stockIngredients, kg, 'prep:stock')}
+    <p>${stockNote}</p>
+    ${renderRows(stockIngredients, kg, 'prep:kimchi-stock')}
     <ol>${stockSteps}</ol>
     ${renderRows(['stockTotal'], kg, 'prep:stock')}
-    <p><a href="https://hls3790.tistory.com/800">김진옥의 기본 멸치다시마육수</a></p></article>`;
+    <p><a href="${stockSource[1]}">${stockSource[0]}</a></p></article>`;
   byId('ingredients').innerHTML = stockCard + groups.map(([title, ids], index) =>
     `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}</article>`).join('');
   renderStep();

@@ -289,6 +289,8 @@ byId('step').addEventListener('click', event => {
   showSection('prep');
   const section = byId(link.hash.slice(1));
   section.focus({ preventScroll: true });
+  const tabBarHeight = byId('prep-tab').parentElement.getBoundingClientRect().height;
+  section.style.scrollMarginTop = `${Math.ceil(tabBarHeight) + 8}px`;
   section.scrollIntoView({ block: 'start' });
 });
 document.addEventListener('change', ({ target }) => {

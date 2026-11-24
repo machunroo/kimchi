@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>김장김치</title>
 <link rel="stylesheet" href="./style.css?v=ingredient-links">
-<script defer src="./recipe.js?v=prep-ingredients"></script>
+<script defer src="./recipe.js?v=materials-list"></script>
 </head>
 <body>
 <main>
@@ -18,11 +18,16 @@
     </div>
   </header>
   <nav aria-label="레시피 단계">
-    <button id="prep-tab" aria-pressed="true" aria-controls="prep">준비</button>
+    <button id="materials-tab" aria-pressed="true" aria-controls="materials">재료</button>
+    <button id="prep-tab" aria-pressed="false" aria-controls="prep">준비</button>
     <button id="cook-tab" aria-pressed="false" aria-controls="cook">조리</button>
     <button type="button" id="restart">다시 시작하기</button>
   </nav>
-  <section id="prep" aria-labelledby="prep-title">
+  <section id="materials" aria-labelledby="materials-title">
+    <div class="intro"><h2 id="materials-title" tabindex="-1">김장 재료 목록</h2></div>
+    <div id="materials-list" class="grid"></div>
+  </section>
+  <section id="prep" aria-labelledby="prep-title" hidden>
     <div class="intro"><div class="shopping-heading"><h2 id="prep-title" tabindex="-1">김장재료</h2><label for="recipe-year">연도 <select id="recipe-year" aria-controls="shopping-list"></select></label></div><p>계량컵 1컵은 200 mL, 1큰술은 15 mL입니다.</p></div>
     <p id="recipe-mode"></p>
     <div id="shopping-list" class="grid"></div>

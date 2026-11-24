@@ -112,7 +112,7 @@ const cookingDays = [
   { tab: 'day-of', stepIds: [3, 11, 12, 4, 8] },
 ];
 const byId = id => document.getElementById(id);
-const sections = [['prep-tab', 'prep'], ['cook-tab', 'cook']];
+const sections = [['materials-tab', 'materials'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
 const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
 const boxInput = byId('box-count');
 const recipeYear = byId('recipe-year');
@@ -224,12 +224,32 @@ function showSection(section, focusTitle = false) {
   if (focusTitle) byId(`${section}-title`).focus();
 }
 
+function renderMaterials(kg) {
+  const factor = kg / ingredients.cabbage.amount;
+  const quantity = id => amountText(ingredients[id].amount * factor, ingredients[id].unit);
+  const count = value => format.format(value * factor);
+  const rows = [
+    ['배추·채소·과일', [
+      ['cabbage'], ['radish', '무', `육수용 ${quantity('stockRadish')} + 다발무 ${count(ingredients.radish.amount + ingredients.blendRadish.amount)}개 (무채용 ${quantity('radish')}, 믹서기용 ${quantity('blendRadish')})`],
+      ['stockLeek', '굵은 대파', `${quantity('stockLeek')} (가는 대파라면 ${count(ingredients.stockLeek.thin)}대)`], ['onion'], ['greens'], ['scallions'], ['apple'], ['pear']]],
+    ['육수·찹쌀풀 재료', [['pollock'], ['kelp'], ['riceFlour']]],
+    ['김칫소 양념·젓갈', [
+      ['garlic', '마늘', `${amountText((ingredients.blendGarlic.amount + ingredients.garlic.amount) * factor, 'g')} (마늘 ${quantity('blendGarlic')} + 다진 마늘 ${quantity('garlic')})`],
+      ['ginger'], ['pepper'], ['fish', '멸치액젓', `믹서기용 ${quantity('blendFish')} + 양념용 ${format.format(ingredients.fish.amount * factor / 1000)} L (청정원 1 L ${count(ingredients.fish.bottles)}병)`],
+      ['shrimp'], ['salt', '천일염', `${quantity('salt')} (마지막 간 조절용)`]]],
+  ];
+  return rows.map(([title, items]) => `<article><h3>${title}</h3><dl>${items.map(([id, name, amount]) =>
+    `<div class="row"><dt>${checkItem('materials:' + id, name || ingredients[id].name)}</dt><dd>${kg ? amount || quantity(id) : '—'}</dd></div>`
+  ).join('')}</dl></article>`).join('');
+}
+
 function renderAmounts() {
   const kg = currentWeight();
   boxInput.setAttribute('aria-invalid', !kg);
   byId('weight-status').textContent = kg
     ? `총 ${amountText(kg, 'kg')}`
     : '1박스(10 kg) 이상 입력하세요';
+  byId('materials-list').innerHTML = renderMaterials(kg);
   const historicalWeight = recordedWeights[recipeYear.value];
   byId('recipe-mode').textContent = historicalWeight
     ? `${recipeYear.value}년 실사용 기록 · 절임배추 ${historicalWeight} kg`
@@ -285,7 +305,7 @@ byId('restart').onclick = () => {
   saveChecklist();
   selectCookingDay(0);
   renderAmounts();
-  showSection('prep', true);
+  showSection('materials', true);
 };
 byId('start').onclick = () => showSection('cook', true);
 byId('prev').onclick = () => {

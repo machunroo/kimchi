@@ -66,3 +66,5 @@ a{color:#823324;text-underline-offset:3px}
 
 .shopping-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 #recipe-year{font:inherit;color:inherit;background:white;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.ingredient-heading{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.stock-reminder{font-size:.875rem;font-weight:700;color:#8e2b19}

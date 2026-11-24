@@ -136,6 +136,13 @@ function checkItem(key, label) {
   return `<label class="check-item"><input type="checkbox" data-check="${key}"${checkedItems.has(key) ? ' checked' : ''}><span>${label}</span></label>`;
 }
 
+function ingredientHeading(title, ids) {
+  const note = ids.includes('stock')
+    ? '<span class="stock-reminder">반드시 황태육수를 식혀서 사용할 것</span>'
+    : '';
+  return `<h3 class="ingredient-heading">${title}${note}</h3>`;
+}
+
 function amountText(value, unit) {
   if (unit === 'g' && value >= 1000) {
     return `${format.format(value / 1000)} kg`;
@@ -183,7 +190,7 @@ function renderStep() {
     return `<li>${checkItem(`${scope}:instruction:${index}`, text)}</li>`;
   }).join('') + (extraInstruction ? `<li>${checkItem(`${scope}:default-seasoning`, extraInstruction)}</li>` : '');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
-  byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
+  byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids)}${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {
     const id = Number(button.dataset.stepId);
     button.hidden = !stepIds.includes(id);
@@ -221,11 +228,11 @@ function renderAmounts() {
     ? `${recipeYear.value}년 실사용 기록 · 절임배추 ${historicalWeight} kg`
     : '현재 재료 · 상단 박스 수에 맞춰 환산';
   byId('shopping-list').innerHTML = groups.map(([title, ids]) =>
-    `<article><h3>${title}</h3>${renderRows(ids, kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
+    `<article>${ingredientHeading(title, ids)}${renderRows(ids, kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
   byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
     const instructions = index === 1 || index === 2 ? steps[index][3] : [];
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
-    return `<article><h3>${title}</h3>${renderRows(ids, kg, `prep:${index}`)}${list ? `<ol>${list}</ol>` : ''}</article>`;
+    return `<article>${ingredientHeading(title, ids)}${renderRows(ids, kg, `prep:${index}`)}${list ? `<ol>${list}</ol>` : ''}</article>`;
   }).join('');
   renderStep();
 }

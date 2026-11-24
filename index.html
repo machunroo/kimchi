@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리집 김장 | 김장 레시피</title>
 <link rel="stylesheet" href="./style.css?v=ingredients-2026">
-<script defer src="./recipe.js?v=ingredients-2026"></script>
+<script defer src="./recipe.js?v=actual-80kg"></script>
 </head>
 <body>
 <main>
@@ -25,46 +25,13 @@
   </nav>
   <section id="shopping" aria-labelledby="shopping-title">
     <div class="intro"><div class="shopping-heading"><h2 id="shopping-title" tabindex="-1">김장재료</h2><label for="recipe-year">연도 <select id="recipe-year" aria-controls="shopping-list"></select></label></div><p>계량컵 1컵은 200 mL, 1큰술은 15 mL입니다.</p></div>
-    <article id="shopping-list"></article>
-  </section>
-        <section>
-          <h3>황태 육수</h3>
-          <dl><div class="row"><dt>물 · 육수용</dt><dd>3~4 L</dd></div>
-          <div class="row"><dt>황태 대가리</dt><dd>3 개</dd></div>
-          <div class="row"><dt>굵은 대파 · 육수용<small>가는 대파라면 2 대</small></dt><dd>1 대</dd></div>
-          <div class="row"><dt>다시마</dt><dd>30 g</dd></div>
-          <div class="row"><dt>무 · 육수용</dt><dd>400 g</dd></div></dl>
-        </section>
-        <section>
-          <h3>찹쌀죽</h3>
-          <dl><div class="row"><dt>불린 찹쌀</dt><dd>340 g<small>2 컵</small></dd></div></dl>
-        </section>
-        <section>
-          <h3>무채와 채소</h3>
-          <dl><div class="row"><dt>무 · 채 썰기용</dt><dd>3 개</dd></div>
-          <div class="row"><dt>고춧가루</dt><dd>850 g<small>10 컵</small></dd></div>
-          <div class="row"><dt>갓<small>청갓 또는 홍갓</small></dt><dd>500 g</dd></div>
-          <div class="row"><dt>쪽파</dt><dd>1 kg</dd></div>
-          <div class="row"><dt>굵은 대파 · 김칫소용<small>가는 대파라면 3 대</small></dt><dd>2 대</dd></div></dl>
-        </section>
-        <section>
-          <h3>김칫소 양념</h3>
-          <dl><div class="row"><dt>멸치액젓</dt><dd>1.1 kg<small>5 컵 · 1,000 mL</small></dd></div>
-          <div class="row"><dt>새우젓</dt><dd>950 g<small>4 컵</small></dd></div>
-          <div class="row"><dt>생새우</dt><dd>500 g<small>3 컵</small></dd></div>
-          <div class="row"><dt>다진 마늘</dt><dd>800 g<small>4 컵</small></dd></div>
-          <div class="row"><dt>다진 생강</dt><dd>60 g<small>4 큰술</small></dd></div>
-          <div class="row"><dt>백설탕</dt><dd>115 g<small>8 큰술</small></dd></div>
-          <div class="row"><dt>천일염<small>선택 · 마지막에 배추와 함께 간을 보고 추가</small></dt><dd>1~2 큰술</dd></div>
-          <div class="row"><dt>미원<small>선택 · 조미료를 넣지 않은 새우젓을 쓸 때</small></dt><dd>1 큰술</dd></div></dl>
-        </section>
-      </details>
-    </details>
+    <p id="recipe-mode"></p>
+    <div id="shopping-list" class="grid"></div>
   </section>
   <section id="prep" aria-labelledby="prep-title" hidden>
     <div class="intro"><h2 id="prep-title" tabindex="-1">용도별 재료 준비</h2><p>황태 육수와 찹쌀풀, 채소와 양념을 용도별로 준비합니다.</p></div>
     <div id="ingredients" class="grid"></div>
-    <details><summary>계량과 환산 기준</summary><p>절임배추 1박스(20 kg)에는 2026년 재료 분량을 적용합니다. 다른 중량에서는 고춧가루·다진 마늘·새우젓·멸치액젓·김칫소용 무·쪽파·백설탕에 중량 참고표의 재료별 증가율을 적용합니다. 나머지 재료는 배추 무게에 비례합니다.</p><p>컵은 영상에서 사용한 200 mL 계량컵입니다. 컵과 g 계량이 모두 있는 재료는 영상에 제시된 값을 각각 표시합니다.</p></details>
+    <details><summary>계량과 환산 기준</summary><p>현재 재료는 2026년 80 kg 기록을 4로 나눈 20 kg 기준으로, 입력한 박스 수에 비례합니다. 2026년을 선택하면 실제 80 kg 분량을 표시합니다.</p></details>
     <div class="actions"><button type="button" id="start">조리 시작</button></div>
   </section>
   <section id="cook" aria-labelledby="cook-title" hidden>
@@ -83,7 +50,7 @@
     </div>
     <article id="step" aria-live="polite"></article>
   </section>
-  <footer><a href="https://www.youtube.com/watch?v=yCAmXF76lxs">중부식 김장김치 20 kg 원본 영상</a><a href="https://www.youtube.com/channel/UC37fRkl_iIjDAr9pf0FFzGA">딸을 위한 레시피 Recipes for daughters</a><a href="https://m.blog.naver.com/notetip/224058717360">중량별 양념 참고표</a></footer>
+  <footer><a href="https://www.youtube.com/watch?v=yCAmXF76lxs">중부식 김장김치 20 kg 원본 영상</a><a href="https://www.youtube.com/channel/UC37fRkl_iIjDAr9pf0FFzGA">딸을 위한 레시피 Recipes for daughters</a></footer>
 </main>
 <dialog id="greens-guide" aria-labelledby="greens-guide-title">
   <div class="dialog-heading">

@@ -82,10 +82,7 @@ const steps = [
     '찹쌀풀과 믹서 재료로 만든 고춧가루 양념에 채 썬 무를 넣고 고루 버무립니다.',
   ]],
   null, // Combined with step 11. Keep later checklist IDs stable.
-  ['김칫소 버무리기', null, seasoning, [
-    '양념에 버무린 무채에 멸치액젓, 새우젓, 다진 마늘, 다진 생강을 넣어 섞습니다.',
-    '손질한 청갓과 쪽파를 넣고 가볍게 버무립니다.',
-  ]],
+  null, // Retired step; preserve other checklist IDs.
   null, // Merged into step 12.
   ['배추에 속을 넣고 보관하기', 545, [], [
     '안쪽 잎부터 한 장씩 들어 김칫소를 바르고, 흰 줄기 밑부분에 넉넉히 넣습니다.',
@@ -112,7 +109,7 @@ steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', n
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
   { tab: 'day-before', stepIds: [0, 1, 2, 10] },
-  { tab: 'day-of', stepIds: [3, 11, 12, 4, 6, 8] },
+  { tab: 'day-of', stepIds: [3, 11, 12, 4, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
@@ -191,14 +188,10 @@ function renderStep() {
   const stepId = stepIds[stepPosition];
   const [title, seconds, ids, instructions] = steps[stepId];
   const scope = `cook:${stepId}`;
-  const useDefaultSeasoning = recipeYear.value === 'current';
-  const extraInstruction = useDefaultSeasoning && stepId === 6
-    ? '생새우와 백설탕을 함께 넣어 버무립니다.'
-    : '';
   const instructionList = instructions.map((text, index) => {
     const key = stepId === 3 ? [0, 'season-after-draining', 1][index] : stepId === 12 ? [1, 2, 3, 'vegetables'][index] : index;
     return `<li>${checkItem(`${scope}:instruction:${key}`, text)}</li>`;
-  }).join('') + (extraInstruction ? `<li>${checkItem(`${scope}:default-seasoning`, extraInstruction)}</li>` : '');
+  }).join('');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
   byId('step').classList.toggle('storage-step', stepId === 8);
   const reminder = stepId === 0 ? '배추 상자를 뒤집는 경우 물이 빠질 수 있음, 박스 안 상태를 보고 뒤집을지 판단할 것'

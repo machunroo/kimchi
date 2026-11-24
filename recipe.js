@@ -67,10 +67,7 @@ const steps = [
   ['고춧가루 양념에 무채 버무리기', null, ['radish'], [
     '찹쌀풀과 믹서 재료로 만든 고춧가루 양념에 채 썬 무를 넣고 고루 버무립니다.',
   ]],
-  ['청갓·쪽파 썰기', 305, greensIngredients, [
-    '미리 씻어 물기를 뺀 갓을 잘게 썹니다.',
-    '쪽파는 흰 부분을 잘게, 초록 부분은 조금 길게 썹니다.',
-  ]],
+  null, // Combined with step 11. Keep later checklist IDs stable.
   ['김칫소 버무리기', null, seasoning, [
     '양념에 버무린 무채에 멸치액젓, 새우젓, 다진 마늘, 다진 생강을 넣어 섞습니다.',
     '손질한 청갓과 쪽파를 넣고 가볍게 버무립니다.',
@@ -88,8 +85,10 @@ const steps = [
     '무는 흙을 씻고 양 끝을 다듬습니다. 갓은 밑동과 시든 잎을 떼고, 쪽파는 뿌리와 누런 잎을 정리합니다.',
     '청갓과 쪽파의 줄기 사이를 씻고 물기를 뺍니다. 손질한 무와 채소는 냉장해 두었다가 김장 당일 썹니다.',
   ]],
-  ['무채 썰기', 271, ['radish'], [
+  ['무채·청갓·쪽파 썰기', 271, ['radish', ...greensIngredients], [
     '손질해 둔 김칫소용 무를 꺼내 가늘고 고르게 채 썹니다.',
+    '미리 씻어 물기를 뺀 청갓을 잘게 썹니다.',
+    '쪽파는 흰 부분을 잘게, 초록 부분은 조금 길게 썹니다.',
   ]],
 ];
 steps.push(['찹쌀풀과 믹서 재료로 양념 만들기', null, [...blenderIngredients, 'pepper', 'salt'], [
@@ -101,7 +100,7 @@ steps.push(['찹쌀풀과 믹서 재료로 양념 만들기', null, [...blenderI
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
   { tab: 'day-before', stepIds: [0, 1, 2, 10] },
-  { tab: 'day-of', stepIds: [3, 11, 12, 4, 5, 6, 7, 8] },
+  { tab: 'day-of', stepIds: [3, 11, 12, 4, 6, 7, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];

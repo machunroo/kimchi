@@ -30,6 +30,7 @@ const ingredients = {
 const stockIngredients = ['water', 'pollock', 'stockLeek', 'kelp', 'stockRadish', 'onion'];
 const defaultSeasoning = {
   fresh: { name: '생새우', amount: 2000, unit: 'g' },
+  sugar: { name: '백설탕', amount: 460, unit: 'g' },
   msg: { name: '미원', amount: 4, unit: '큰술', hint: '선택 · 조미료를 넣지 않은 새우젓을 쓸 때' },
 };
 const greensIngredients = ['greens', 'scallions'];
@@ -171,7 +172,7 @@ function renderStep() {
   const scope = `cook:${stepId}`;
   const useDefaultSeasoning = recipeYear.value === 'current';
   const extraInstruction = useDefaultSeasoning && stepId === 6
-    ? '생새우를 함께 넣어 버무립니다.'
+    ? '생새우와 백설탕을 함께 넣어 버무립니다.'
     : useDefaultSeasoning && stepId === 7
       ? '미원은 조미료가 들어 있지 않은 새우젓을 쓰고 감칠맛을 더하고 싶을 때 넣습니다.'
       : '';

@@ -227,15 +227,18 @@ function showSection(section, focusTitle = false) {
 function renderMaterials(kg) {
   const factor = kg / ingredients.cabbage.amount;
   const quantity = id => amountText(ingredients[id].amount * factor, ingredients[id].unit);
+  // Shopping estimates: 1 kg per radish; recipe measure of 1,100 g per litre of fish sauce.
+  const radishGrams = ingredients.stockRadish.amount + 1000 * (ingredients.radish.amount + ingredients.blendRadish.amount);
+  const fishSauceMl = ingredients.fish.amount + ingredients.blendFish.amount / 1.1;
   const count = value => format.format(value * factor);
   const rows = [
     ['배추·채소·과일', [
-      ['cabbage'], ['radish', '무', `육수용 ${quantity('stockRadish')} + 다발무 ${count(ingredients.radish.amount + ingredients.blendRadish.amount)}개 (무채용 ${quantity('radish')}, 믹서기용 ${quantity('blendRadish')})`],
+      ['cabbage'], ['radish', '무', `약 ${amountText(radishGrams * factor, 'g')}`],
       ['stockLeek', '굵은 대파', `${quantity('stockLeek')} (가는 대파라면 ${count(ingredients.stockLeek.thin)}대)`], ['onion'], ['greens'], ['scallions'], ['apple'], ['pear']]],
     ['육수·찹쌀풀 재료', [['pollock'], ['kelp'], ['riceFlour']]],
     ['김칫소 양념·젓갈', [
-      ['garlic', '마늘', `${amountText((ingredients.blendGarlic.amount + ingredients.garlic.amount) * factor, 'g')} (마늘 ${quantity('blendGarlic')} + 다진 마늘 ${quantity('garlic')})`],
-      ['ginger'], ['pepper'], ['fish', '멸치액젓', `믹서기용 ${quantity('blendFish')} + 양념용 ${format.format(ingredients.fish.amount * factor / 1000)} L (청정원 1 L ${count(ingredients.fish.bottles)}병)`],
+      ['garlic', '마늘', `${amountText((ingredients.blendGarlic.amount + ingredients.garlic.amount) * factor, 'g')}`],
+      ['ginger'], ['pepper'], ['fish', '멸치액젓', `약 ${format.format(Math.round(fishSauceMl * factor))} mL`],
       ['shrimp'], ['salt', '천일염', `${quantity('salt')} (마지막 간 조절용)`]]],
   ];
   return rows.map(([title, items]) => `<article><h3>${title}</h3><dl>${items.map(([id, name, amount]) =>

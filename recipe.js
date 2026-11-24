@@ -273,7 +273,18 @@ boxInput.addEventListener('input', () => {
   }
   renderAmounts();
 });
-recipeYear.innerHTML = '<option value="current">현재 재료</option>' + Object.keys(recordedWeights).map(year => `<option value="${year}">${year}년</option>`).join('');
+recipeYear.innerHTML = '<option value="current">선택 안 함</option>' + Object.keys(recordedWeights).map(year => `<option value="${year}">${year}년</option>`).join('');
 recipeYear.value = 'current';
-recipeYear.addEventListener('change', renderAmounts);
+let currentBoxCount = boxInput.value;
+recipeYear.addEventListener('change', () => {
+  const historicalWeight = recordedWeights[recipeYear.value];
+  if (historicalWeight) {
+    if (!boxInput.readOnly) currentBoxCount = boxInput.value;
+    boxInput.value = String(historicalWeight / kilogramsPerBox);
+  } else {
+    boxInput.value = currentBoxCount;
+  }
+  boxInput.readOnly = Boolean(historicalWeight);
+  renderAmounts();
+});
 renderAmounts();

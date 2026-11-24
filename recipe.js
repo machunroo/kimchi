@@ -54,6 +54,7 @@ const steps = [
     '냄비에 물과 황태 대가리, 대파, 다시마, 무, 양파를 넣습니다.',
     '끓기 시작하면 중약불로 줄여 약 30분 우립니다. 다시마도 다른 재료와 함께 우립니다.',
     '불을 끄고 체로 건더기를 걸러 육수만 남깁니다.',
+    '찹쌀풀을 쑤기 전에 황태육수를 충분히 식힙니다.',
   ]],
   ['황태육수로 찹쌀풀 쑤기', null, ['riceFlour', 'stock'], [
     '식힌 황태육수에 찹쌀가루를 풀어 덩어리를 없앱니다.',
@@ -82,9 +83,7 @@ const steps = [
     '겉잎으로 감싸 김치통에 담고, 김장용 비닐을 윗면에 밀착시켜 공기 접촉을 줄입니다.',
     '영상에서는 서늘한 곳에서 약 24시간 익힌 뒤 김치냉장고로 옮깁니다.',
   ]],
-  ['찹쌀가루 계량하기', null, ['riceFlour'], [
-    '박스 수에 맞춰 찹쌀가루를 계량합니다.',
-  ]],
+  null, // Retired step 9. Keep later checklist IDs stable.
   ['김칫소 손질하기 (무, 청갓, 쪽파)', 305, ['radish', ...greensIngredients], [
     '무는 흙을 씻고 양 끝을 다듬습니다. 갓은 밑동과 시든 잎을 떼고, 쪽파는 뿌리와 누런 잎을 정리합니다.',
     '청갓과 쪽파의 줄기 사이를 씻고 물기를 뺍니다. 손질한 무와 채소는 냉장해 두었다가 김장 당일 썹니다.',
@@ -101,7 +100,7 @@ steps.push(['찹쌀풀과 믹서 재료로 양념 만들기', null, [...blenderI
 ]]);
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
-  { tab: 'day-before', stepIds: [9, 1, 2, 10] },
+  { tab: 'day-before', stepIds: [1, 2, 10] },
   { tab: 'day-of', stepIds: [0, 3, 11, 12, 4, 5, 6, 7, 8] },
 ];
 const byId = id => document.getElementById(id);

@@ -100,8 +100,8 @@ steps.push(['찹쌀풀과 믹서 재료로 양념 만들기', null, [...blenderI
 ]]);
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
-  { tab: 'day-before', stepIds: [1, 2, 10] },
-  { tab: 'day-of', stepIds: [0, 3, 11, 12, 4, 5, 6, 7, 8] },
+  { tab: 'day-before', stepIds: [0, 1, 2, 10] },
+  { tab: 'day-of', stepIds: [3, 11, 12, 4, 5, 6, 7, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];

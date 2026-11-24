@@ -9,7 +9,7 @@ const ingredients = {
   onion: {"name":"양파","amount":4,"unit":"개","reduced":2},
   riceFlour: {"name":"찹쌀가루","amount":1200,"unit":"g"},
   stock: {"name":"황태육수","note":"끓여 둔 육수 사용"},
-  radish: {"name":"다발무 · 채 썰기용","amount":8,"unit":"개"},
+  radish: {"name":"다발무","amount":8,"unit":"개"},
   greens: {"name":"청갓","amount":2,"unit":"단"},
   scallions: {"name":"쪽파","amount":1,"unit":"단"},
   apple: {"name":"사과","amount":3,"unit":"개"},

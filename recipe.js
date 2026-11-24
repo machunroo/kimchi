@@ -112,7 +112,7 @@ const cookingDays = [
   { tab: 'day-of', stepIds: [3, 11, 12, 4, 8] },
 ];
 const byId = id => document.getElementById(id);
-const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
+const sections = [['prep-tab', 'prep'], ['cook-tab', 'cook']];
 const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
 const boxInput = byId('box-count');
 const recipeYear = byId('recipe-year');
@@ -268,7 +268,7 @@ byId('step').addEventListener('click', event => {
   const link = event.target.closest('[data-ingredient-link]');
   if (!link) return;
   event.preventDefault();
-  showSection('shopping');
+  showSection('prep');
   const section = byId(link.hash.slice(1));
   section.focus({ preventScroll: true });
   section.scrollIntoView({ block: 'start' });
@@ -285,7 +285,7 @@ byId('restart').onclick = () => {
   saveChecklist();
   selectCookingDay(0);
   renderAmounts();
-  showSection('shopping', true);
+  showSection('prep', true);
 };
 byId('start').onclick = () => showSection('cook', true);
 byId('prev').onclick = () => {

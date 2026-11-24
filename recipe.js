@@ -41,9 +41,8 @@ const groups = [
   ['절임배추', ['cabbage']],
   ['황태 육수', stockIngredients],
   ['찹쌀풀 재료', ['riceFlour', 'stock']],
-  ['김칫소 채소', ['radish', ...greensIngredients]],
   ['김칫소 믹서기', blenderIngredients],
-  ['김칫소 양념', ['pepper', ...seasoning, ...optionalSeasoning]],
+  ['김칫소 양념', ['radish', ...greensIngredients, 'pepper', ...seasoning, ...optionalSeasoning]],
 ];
 const shoppingGroups = groups.map(([title, ids]) => {
   const moved = ['shrimp', 'garlic', 'ginger'];
@@ -53,7 +52,6 @@ const shoppingGroups = groups.map(([title, ids]) => {
 });
 const ingredientSections = {
   '찹쌀풀 재료': 'rice-paste',
-  '김칫소 채소': 'vegetables',
   '김칫소 믹서기': 'blender',
   '김칫소 양념': 'seasoning',
 };
@@ -106,7 +104,7 @@ steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', n
   '완전히 식힌 찹쌀풀과 믹서기에 간 김칫소 재료를 섞습니다.',
   '1번에서 섞은 재료에 고춧가루를 넣고 버무립니다.',
   '간을 보고 심심하면 천일염을 조금씩 넣어 짭짤하게 맞춥니다.',
-  '3번에서 간을 맞춘 양념에 김칫소 채소를 넣고 버무립니다.',
+  '3번에서 간을 맞춘 양념에 무채와 썰어 둔 청갓, 쪽파를 넣고 버무립니다.',
 ]]);
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
@@ -173,9 +171,10 @@ function renderRows(ids, kg, scope) {
     if (kg && item.thin) hints.push(`가는 대파라면 ${amountText(item.thin * factor, '대')}`);
     if (kg && item.reduced) hints.push(`줄일 경우 약 ${amountText(item.reduced * factor, item.unit)}`);
     if (kg && item.bottles) hints.push(`1 L 제품 기준 ${amountText(item.bottles * factor, '병')}`);
+    const checkScope = scope === 'prep:5' && ['radish', ...greensIngredients].includes(id) ? 'prep:3' : scope;
     const label = `${isRadishCutting ? '무채썰기' : item.name}${hints.filter(Boolean).map(hint => `<small>${hint}</small>`).join('')}`;
     const guide = id === 'greens' ? '<button type="button" class="guide-button" data-greens-guide aria-haspopup="dialog" aria-controls="greens-guide">청갓·홍갓 설명</button>' : '';
-    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}${guide}</dt><dd>${quantity}</dd></div>`;
+    return `<div class="row"><dt>${checkItem(`${checkScope}:${id}`, label)}${guide}</dt><dd>${quantity}</dd></div>`;
   }).join('') + '</dl>';
 }
 
@@ -244,7 +243,7 @@ function renderAmounts() {
   byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
     const instructions = index === 1 || index === 2 ? steps[index][3] : [];
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
-    return `<article>${ingredientHeading(title, ids)}${renderRows(ids, kg, `prep:${index}`)}${list ? `<ol>${list}</ol>` : ''}</article>`;
+    return `<article>${ingredientHeading(title, ids)}${renderRows(ids, kg, `prep:${index >= 3 ? index + 1 : index}`)}${list ? `<ol>${list}</ol>` : ''}</article>`;
   }).join('');
   renderStep();
 }

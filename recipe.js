@@ -63,7 +63,7 @@ const steps = [
     '채반에 배추를 뒤집어 놓고 1~2시간 물을 뺍니다.',
     '헹굴 필요가 있으면 영상의 방법대로 소금물로 가볍게 헹군 뒤 물을 뺍니다.',
   ]],
-  ['무채에 만든 양념 버무리기', null, ['radish'], [
+  ['고춧가루 양념에 무채 버무리기', null, ['radish'], [
     '찹쌀풀과 믹서 재료로 만든 고춧가루 양념에 채 썬 무를 넣고 고루 버무립니다.',
   ]],
   ['청갓·쪽파 썰기', 305, greensIngredients, [
@@ -102,7 +102,7 @@ steps.push(['찹쌀풀과 믹서 재료로 양념 만들기', null, [...blenderI
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
   { tab: 'day-before', stepIds: [9, 1, 2, 10] },
-  { tab: 'day-of', stepIds: [0, 3, 11, 12, 5, 4, 6, 7, 8] },
+  { tab: 'day-of', stepIds: [0, 3, 11, 12, 4, 5, 6, 7, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];

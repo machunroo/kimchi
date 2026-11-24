@@ -45,6 +45,12 @@ const groups = [
   ['김칫소 믹서기', blenderIngredients],
   ['김칫소 양념', ['pepper', ...seasoning, ...optionalSeasoning]],
 ];
+const shoppingGroups = groups.map(([title, ids]) => {
+  const moved = ['shrimp', 'garlic', 'ginger'];
+  if (title === '김칫소 믹서기') return [title, [...ids, ...moved]];
+  if (title === '김칫소 양념') return [title, ids.filter(id => !moved.includes(id))];
+  return [title, ids];
+});
 const videoUrl = 'https://www.youtube.com/watch?v=yCAmXF76lxs';
 const steps = [
   ['배추 상자 뒤집기', 18, ['cabbage'], [
@@ -228,7 +234,7 @@ function renderAmounts() {
   byId('recipe-mode').textContent = historicalWeight
     ? `${recipeYear.value}년 실사용 기록 · 절임배추 ${historicalWeight} kg`
     : '현재 재료 · 상단 박스 수에 맞춰 환산';
-  byId('shopping-list').innerHTML = groups.map(([title, ids]) =>
+  byId('shopping-list').innerHTML = shoppingGroups.map(([title, ids]) =>
     `<article>${ingredientHeading(title, ids)}${renderRows(ids, kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
   byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
     const instructions = index === 1 || index === 2 ? steps[index][3] : [];

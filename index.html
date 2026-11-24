@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>김장김치</title>
-<link rel="stylesheet" href="./style.css?v=ingredient-links">
+<link rel="stylesheet" href="./style.css?v=header-year">
 <script defer src="./recipe.js?v=radish-then-greens"></script>
 </head>
 <body>
 <main>
   <header class="hero">
-    <div><h1>김장김치</h1><p>절임배추 박스 수를 입력하면 재료량이 자동으로 바뀝니다.</p></div>
+    <div><label for="recipe-year">연도 <select id="recipe-year" aria-controls="shopping-list"></select></label><h1>김장김치</h1><p>절임배추 박스 수를 입력하면 재료량이 자동으로 바뀝니다.</p></div>
     <div class="weight">
       <label for="box-count">절임배추</label>
       <div class="input"><input id="box-count" type="number" min="1" step="any" value="1" aria-describedby="weight-status"><span>박스</span></div>
@@ -28,7 +28,7 @@
     <div id="materials-list" class="grid"></div>
   </section>
   <section id="prep" aria-labelledby="prep-title" hidden>
-    <div class="intro"><div class="shopping-heading"><h2 id="prep-title" tabindex="-1">김장재료</h2><label for="recipe-year">연도 <select id="recipe-year" aria-controls="shopping-list"></select></label></div><p>계량컵 1컵은 200 mL, 1큰술은 15 mL입니다.</p></div>
+    <div class="intro"><div class="shopping-heading"><h2 id="prep-title" tabindex="-1">김장재료</h2></div><p>계량컵 1컵은 200 mL, 1큰술은 15 mL입니다.</p></div>
     <p id="recipe-mode"></p>
     <div id="shopping-list" class="grid"></div>
     <details><summary>계량과 환산 기준</summary><p>1박스는 10 kg입니다. 재료는 2026년 80 kg 기록을 기준으로 배추 무게에 비례해 계산합니다. 2026년을 선택하면 8박스에서 시작하며, 박스 수를 바꿔 환산할 수 있습니다.</p></details>

@@ -48,7 +48,7 @@ const groups = [
 const videoUrl = 'https://www.youtube.com/watch?v=yCAmXF76lxs';
 const steps = [
   ['배추 상자 뒤집기', 18, ['cabbage'], [
-    '받은 절임배추 상자를 물이 흘러도 되는 서늘한 곳에 뒤집어 약 1~2시간 둡니다. 아래쪽에 고인 절임물이 배추에 고루 닿도록 합니다.',
+    '받은 절임배추의 포장과 박스 안 상태를 확인합니다. 뒤집기로 했다면 물이 흘러도 되는 서늘한 곳에 약 1~2시간 두어 아래쪽에 고인 절임물이 배추에 고루 닿게 합니다.',
   ]],
   ['황태 육수 끓이기', null, stockIngredients, [
     '냄비에 물과 황태 대가리, 대파, 다시마, 무, 양파를 넣습니다.',
@@ -136,10 +136,8 @@ function checkItem(key, label) {
   return `<label class="check-item"><input type="checkbox" data-check="${key}"${checkedItems.has(key) ? ' checked' : ''}><span>${label}</span></label>`;
 }
 
-function ingredientHeading(title, ids) {
-  const note = ids.includes('stock')
-    ? '<span class="stock-reminder">반드시 황태육수를 식혀서 사용할 것</span>'
-    : '';
+function ingredientHeading(title, ids, reminder = ids.includes('stock') ? '반드시 황태육수를 식혀서 사용할 것' : '') {
+  const note = reminder ? `<span class="stock-reminder">${reminder}</span>` : '';
   return `<h3 class="ingredient-heading">${title}${note}</h3>`;
 }
 
@@ -190,7 +188,8 @@ function renderStep() {
     return `<li>${checkItem(`${scope}:instruction:${index}`, text)}</li>`;
   }).join('') + (extraInstruction ? `<li>${checkItem(`${scope}:default-seasoning`, extraInstruction)}</li>` : '');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
-  byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids)}${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
+  const reminder = stepId === 0 ? '배추 상자를 뒤집는 경우 물이 빠질 수 있음, 박스 안 상태를 보고 뒤집을지 판단할 것' : undefined;
+  byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids, reminder)}${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {
     const id = Number(button.dataset.stepId);
     button.hidden = !stepIds.includes(id);

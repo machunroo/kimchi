@@ -243,7 +243,7 @@ function renderAmounts() {
   function shoppingRows(title, ids) {
     if (title !== '김칫소 양념') return renderRows(ids, kg, shoppingScope);
     const vegetables = ['radish', ...greensIngredients];
-    return `<section id="vegetables" tabindex="-1"><h4>김칫소 채소</h4>${renderRows(vegetables, kg, shoppingScope)}</section>` +
+    return `<div id="vegetables" tabindex="-1">${renderRows(vegetables, kg, shoppingScope)}</div>` +
       renderRows(ids.filter(id => !vegetables.includes(id)), kg, shoppingScope);
   }
   byId('shopping-list').innerHTML = shoppingGroups.map(([title, ids]) =>

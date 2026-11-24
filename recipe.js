@@ -191,7 +191,7 @@ function renderStep() {
   byId('step').classList.toggle('storage-step', stepId === 8);
   const reminder = stepId === 0 ? '배추 상자를 뒤집는 경우 물이 빠질 수 있음, 박스 안 상태를 보고 뒤집을지 판단할 것'
     : stepId === 8 ? '[중요] 배추는 잘린 단면이 위로 오도록 넣어야 함' : undefined;
-  byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids, reminder)}${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
+  byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids, reminder)}${renderRows(ids, currentWeight(), scope)}<section class="cooking-instructions" aria-labelledby="instructions-heading"><h4 id="instructions-heading">조리 순서</h4><ol>${instructionList}</ol></section>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {
     const id = Number(button.dataset.stepId);
     button.hidden = !stepIds.includes(id);

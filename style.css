@@ -70,3 +70,6 @@ a{color:#823324;text-underline-offset:3px}
 .stock-reminder{font-size:.875rem;font-weight:700;color:#8e2b19}
 #step .ingredient-heading > .check-item{color:#000}
 .storage-step .stock-reminder{font-size:inherit}
+.cooking-instructions{border-top:2px solid #dfcbbf;margin:20px 0 12px;padding-top:14px}
+.cooking-instructions h4{margin:0;font-size:1.1rem;color:#231b16}
+.cooking-instructions ol{margin:10px 0 0;padding-inline-start:1.65rem}

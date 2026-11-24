@@ -28,6 +28,10 @@ const ingredients = {
   msg: {"name":"미원","note":"생략","hint":"기록상 1큰술 · 80 kg 기준"},
 };
 const stockIngredients = ['water', 'pollock', 'stockLeek', 'kelp', 'stockRadish', 'onion'];
+const defaultSeasoning = {
+  fresh: { name: '생새우', amount: 2000, unit: 'g' },
+  msg: { name: '미원', amount: 4, unit: '큰술', hint: '선택 · 조미료를 넣지 않은 새우젓을 쓸 때' },
+};
 const greensIngredients = ['greens', 'scallions'];
 const blenderIngredients = ['apple', 'pear', 'blendRadish', 'blendFish', 'blendGarlic'];
 const seasoning = ['pepper', 'fish', 'shrimp', 'fresh', 'garlic', 'ginger', 'sugar'];
@@ -142,7 +146,7 @@ function amountText(value, unit) {
 function renderRows(ids, kg, scope) {
   if (!ids.length) return '';
   return '<dl>' + ids.map(id => {
-    const item = ingredients[id];
+    const item = (recipeYear.value === 'current' && defaultSeasoning[id]) || ingredients[id];
     const factor = kg / ingredients.cabbage.amount;
     const amount = item.note ?? (kg ? amountText(item.amount * factor, item.unit) : '—');
     const hints = [item.hint];
@@ -165,7 +169,18 @@ function renderStep() {
   const stepId = stepIds[stepPosition];
   const [title, seconds, ids, instructions] = steps[stepId];
   const scope = `cook:${stepId}`;
-  const instructionList = instructions.map((line, index) => `<li>${checkItem(`${scope}:instruction:${index}`, line)}</li>`).join('');
+  const useDefaultSeasoning = recipeYear.value === 'current';
+  const extraInstruction = useDefaultSeasoning && stepId === 6
+    ? '생새우를 함께 넣어 버무립니다.'
+    : useDefaultSeasoning && stepId === 7
+      ? '미원은 조미료가 들어 있지 않은 새우젓을 쓰고 감칠맛을 더하고 싶을 때 넣습니다.'
+      : '';
+  const instructionList = instructions.map((line, index) => {
+    const text = useDefaultSeasoning && stepId === 7 && index === 0
+      ? '김칫소는 소량을 덜어 생새우가 충분히 익도록 가열한 뒤 식혀, 절임배추와 함께 맛보고 천일염으로 간을 맞춥니다.'
+      : line;
+    return `<li>${checkItem(`${scope}:instruction:${index}`, text)}</li>`;
+  }).join('') + (extraInstruction ? `<li>${checkItem(`${scope}:default-seasoning`, extraInstruction)}</li>` : '');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
   byId('step').innerHTML = `<h3>${checkItem(`${scope}:done`, title)}</h3>${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {

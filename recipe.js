@@ -1,5 +1,7 @@
 // Actual quantities recorded for the 2026 batch of 80 kg.
 const ingredients = {
+  blendedFilling: { name: '김칫소 믹서기', note: '준비한 분량 전부' },
+  ricePaste: { name: '찹쌀풀', note: '준비한 분량 전부' },
   cabbage: {"name":"해남 절임배추","amount":80,"unit":"kg"},
   water: {"name":"물","amount":8,"unit":"L"},
   pollock: {"name":"황태 대가리","amount":12,"unit":"개"},
@@ -42,7 +44,7 @@ const groups = [
   ['황태 육수', stockIngredients],
   ['찹쌀풀 재료', ['riceFlour', 'stock']],
   ['김칫소 믹서기', blenderIngredients],
-  ['김칫소 양념', ['radish', ...greensIngredients, 'pepper', ...seasoning, ...optionalSeasoning]],
+  ['김칫소 양념', ['radish', ...greensIngredients, 'blendedFilling', 'ricePaste', 'pepper', ...seasoning, ...optionalSeasoning]],
 ];
 const shoppingGroups = groups.map(([title, ids]) => {
   const moved = ['shrimp', 'garlic', 'ginger'];
@@ -101,7 +103,7 @@ const steps = [
     '쪽파는 흰 부분을 잘게, 초록 부분은 조금 길게 썹니다.',
   ]],
 ];
-steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', null, [...blenderIngredients, 'pepper', ...optionalSeasoning], [
+steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', null, [], [
   '[찹쌀풀 + 김칫소 믹서기]를 섞기',
   '[1]에 고추가루 버무리기',
   '간보고 심심한 경우 소금추가 ( 간은 짭짤하게 )',

@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리집 김장 | 김장 레시피</title>
 <link rel="stylesheet" href="./style.css?v=cooking-days">
-<script defer src="./recipe.js?v=blender-radish-500g"></script>
+<script defer src="./recipe.js?v=remember-boxes"></script>
 </head>
 <body>
 <main>
   <header class="hero">
-    <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 1박스는 20 kg입니다. 박스 수에 따라 김치 재료가 자동으로 바뀝니다.</p></div>
+    <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 박스 수를 입력하면 재료량이 자동으로 바뀝니다.</p></div>
     <div class="weight">
       <label for="box-count">절임배추</label>
       <div class="input"><input id="box-count" type="number" min="0.01" step="any" value="1" aria-describedby="weight-status"><span>박스</span></div>
@@ -24,19 +24,61 @@
     <button type="button" id="restart">다시 시작하기</button>
   </nav>
   <section id="shopping" aria-labelledby="shopping-title">
-    <div class="intro"><h2 id="shopping-title" tabindex="-1">김장 재료 전체</h2><p>김대석 셰프의 절임배추 20 kg 레시피를 바탕으로 생새우를 뺐습니다. 육수는 김대석 셰프의 배합에 ‘딸을 위한 레시피’의 황태 대가리를 더했습니다.</p></div>
+    <div class="intro"><h2 id="shopping-title" tabindex="-1">김장 재료 전체</h2><p>영상의 계량 기준은 1컵 200 mL, 1큰술 15 mL, 1작은술 5 mL입니다.</p></div>
     <article id="shopping-list"></article>
+    <details>
+      <summary>연도별 재료 이력</summary>
+      <details>
+        <summary>2026년 · 절임배추 1박스 (20 kg)</summary>
+        <p>중부식 김장 레시피의 기준 분량을 기록했습니다. 컵은 200 mL, 큰술은 15 mL입니다.</p>
+        <section>
+          <h3>배추 준비</h3>
+          <dl><div class="row"><dt>절임배추</dt><dd>20 kg</dd></div></dl>
+        </section>
+        <section>
+          <h3>황태 육수</h3>
+          <dl><div class="row"><dt>물 · 육수용</dt><dd>3~4 L</dd></div>
+          <div class="row"><dt>황태 대가리</dt><dd>3 개</dd></div>
+          <div class="row"><dt>굵은 대파 · 육수용<small>가는 대파라면 2 대</small></dt><dd>1 대</dd></div>
+          <div class="row"><dt>다시마</dt><dd>30 g</dd></div>
+          <div class="row"><dt>무 · 육수용</dt><dd>400 g</dd></div></dl>
+        </section>
+        <section>
+          <h3>찹쌀죽</h3>
+          <dl><div class="row"><dt>불린 찹쌀</dt><dd>340 g<small>2 컵</small></dd></div></dl>
+        </section>
+        <section>
+          <h3>무채와 채소</h3>
+          <dl><div class="row"><dt>무 · 채 썰기용</dt><dd>3 개</dd></div>
+          <div class="row"><dt>고춧가루</dt><dd>850 g<small>10 컵</small></dd></div>
+          <div class="row"><dt>갓<small>청갓 또는 홍갓</small></dt><dd>500 g</dd></div>
+          <div class="row"><dt>쪽파</dt><dd>1 kg</dd></div>
+          <div class="row"><dt>굵은 대파 · 김칫소용<small>가는 대파라면 3 대</small></dt><dd>2 대</dd></div></dl>
+        </section>
+        <section>
+          <h3>김칫소 양념</h3>
+          <dl><div class="row"><dt>멸치액젓</dt><dd>1.1 kg<small>5 컵 · 1,000 mL</small></dd></div>
+          <div class="row"><dt>새우젓</dt><dd>950 g<small>4 컵</small></dd></div>
+          <div class="row"><dt>생새우</dt><dd>500 g<small>3 컵</small></dd></div>
+          <div class="row"><dt>다진 마늘</dt><dd>800 g<small>4 컵</small></dd></div>
+          <div class="row"><dt>다진 생강</dt><dd>60 g<small>4 큰술</small></dd></div>
+          <div class="row"><dt>백설탕</dt><dd>115 g<small>8 큰술</small></dd></div>
+          <div class="row"><dt>천일염<small>선택 · 마지막에 배추와 함께 간을 보고 추가</small></dt><dd>1~2 큰술</dd></div>
+          <div class="row"><dt>미원<small>선택 · 조미료를 넣지 않은 새우젓을 쓸 때</small></dt><dd>1 큰술</dd></div></dl>
+        </section>
+      </details>
+    </details>
   </section>
   <section id="prep" aria-labelledby="prep-title" hidden>
-    <div class="intro"><h2 id="prep-title" tabindex="-1">용도별 재료 준비</h2><p>육수, 찹쌀풀, 믹서용 재료와 김칫소 채소를 용도별로 준비합니다.</p></div>
+    <div class="intro"><h2 id="prep-title" tabindex="-1">용도별 재료 준비</h2><p>황태 육수와 찹쌀죽, 채소와 양념을 용도별로 준비합니다.</p></div>
     <div id="ingredients" class="grid"></div>
-    <details><summary>계량과 환산 기준</summary><p>재료는 절임배추 20 kg 기준으로 비례 환산합니다. 1컵은 200 mL입니다. 영상의 나무숟가락은 일반 밥숟가락보다 조금 큽니다.</p></details>
+    <details><summary>계량과 환산 기준</summary><p>절임배추 1박스(20 kg)에는 영상 분량을 적용합니다. 다른 중량에서는 고춧가루·다진 마늘·새우젓·멸치액젓·김칫소용 무·쪽파·백설탕에 중량 참고표의 재료별 증가율을 적용합니다. 나머지 재료는 배추 무게에 비례합니다.</p><p>컵은 영상에서 사용한 200 mL 계량컵입니다. 컵과 g 계량이 모두 있는 재료는 영상에 제시된 값을 각각 표시합니다.</p></details>
     <div class="actions"><button type="button" id="start">조리 시작</button></div>
   </section>
   <section id="cook" aria-labelledby="cook-title" hidden>
     <div class="intro"><h2 id="cook-title" tabindex="-1">조리 순서</h2></div>
     <div class="cook-days" role="group" aria-label="김장 일정">
-      <button type="button" id="day-before" aria-pressed="true" aria-controls="step">미리 준비</button>
+      <button type="button" id="day-before" aria-pressed="true" aria-controls="step">김장 하루 전 (또는 6시간 전)</button>
       <button type="button" id="day-of" aria-pressed="false" aria-controls="step">김장 당일</button>
     </div>
     <p id="step-count"></p>
@@ -49,7 +91,7 @@
     </div>
     <article id="step" aria-live="polite"></article>
   </section>
-  <footer><a href="https://youtu.be/BE4oP2FzDYA">김대석 셰프TV 원본 영상</a></footer>
+  <footer><a href="https://www.youtube.com/watch?v=yCAmXF76lxs">중부식 김장김치 20 kg 원본 영상</a><a href="https://www.youtube.com/channel/UC37fRkl_iIjDAr9pf0FFzGA">딸을 위한 레시피 Recipes for daughters</a><a href="https://m.blog.naver.com/notetip/224058717360">중량별 양념 참고표</a></footer>
 </main>
 <dialog id="greens-guide" aria-labelledby="greens-guide-title">
   <div class="dialog-heading">
@@ -60,7 +102,7 @@
   <p>잎과 줄기가 푸른색입니다. 대체로 향과 매운맛이 순한 편이라 동치미, 물김치, 겉절이, 나물, 갓김치에 쓰입니다.</p>
   <h3>홍갓</h3>
   <p>잎이나 줄기에 붉은색 또는 자주색이 돕니다. 잎이 얇고 부드러운 편이며, 톡 쏘는 향과 색을 살려 배추김치나 알타리김치에 자주 씁니다.</p>
-  <p>향과 매운맛은 재배 환경과 수확 시기에 따라 달라집니다. 이 레시피의 기본 재료는 청갓입니다.</p>
+  <p>향과 매운맛은 재배 환경과 수확 시기에 따라 달라집니다. 이 김장 레시피에는 청갓과 홍갓 중 하나를 쓰거나, 두 가지를 섞어 표시된 갓 분량을 맞추면 됩니다.</p>
 </dialog>
 </body>
 </html>

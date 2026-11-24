@@ -78,13 +78,15 @@ const steps = [
     '물을 빼고 2~3시간 안에 양념을 버무립니다.',
     '헹굴 필요가 있으면 영상의 방법대로 소금물로 가볍게 헹군 뒤 물을 뺍니다.',
   ]],
-  null, // Retired step; keep remaining checklist IDs stable.
+  ['고춧가루 양념에 무채 버무리기', null, ['radish', ...greensIngredients], [
+    '찹쌀풀과 믹서 재료로 만든 고춧가루 양념에 채 썬 무를 넣고 고루 버무립니다.',
+    '청갓, 쪽파 넣고 버무리기',
+  ]],
   null, // Combined with step 11. Keep later checklist IDs stable.
   null, // Retired step; preserve other checklist IDs.
   null, // Merged into step 12.
   ['배추에 속을 넣고 보관하기', 545, [], [
     '안쪽 잎부터 한 장씩 들어 김칫소를 바르고, 흰 줄기 밑부분에 넉넉히 넣습니다.',
-    '청갓, 쪽파 넣고 버무리기',
     '겉잎으로 감싸 김치통에 담고, 김장용 비닐을 윗면에 밀착시켜 공기 접촉을 줄입니다.',
     '영상에서는 서늘한 곳에서 약 24시간 익힌 뒤 김치냉장고로 옮깁니다.',
   ]],
@@ -108,7 +110,7 @@ steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', n
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
   { tab: 'day-before', stepIds: [0, 1, 2, 10] },
-  { tab: 'day-of', stepIds: [3, 11, 12, 8] },
+  { tab: 'day-of', stepIds: [3, 11, 12, 4, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['materials-tab', 'materials'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
@@ -188,9 +190,10 @@ function renderStep() {
   const [title, seconds, ids, instructions] = steps[stepId];
   const scope = `cook:${stepId}`;
   const instructionList = instructions.map((text, index) => {
-    const keys = { 3: [0, 'season-after-draining', 1], 8: [0, 'mix-greens', 1, 2], 12: [1, 2, 3, 'vegetables'] };
+    const keys = { 3: [0, 'season-after-draining', 1], 12: [1, 2, 3, 'vegetables'] };
     const key = keys[stepId]?.[index] ?? index;
-    return `<li>${checkItem(`${scope}:instruction:${key}`, text)}</li>`;
+    const checkKey = stepId === 4 && index === 1 ? 'cook:8:instruction:mix-greens' : `${scope}:instruction:${key}`;
+    return `<li>${checkItem(checkKey, text)}</li>`;
   }).join('');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
   byId('step').classList.toggle('storage-step', stepId === 8);

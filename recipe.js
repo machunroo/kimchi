@@ -72,9 +72,7 @@ const steps = [
     '양념에 버무린 무채에 멸치액젓, 새우젓, 다진 마늘, 다진 생강을 넣어 섞습니다.',
     '손질한 청갓과 쪽파를 넣고 가볍게 버무립니다.',
   ]],
-  ['천일염으로 간 조절하기', null, optionalSeasoning, [
-    '절임배추와 김칫소를 함께 맛보고, 싱거우면 천일염을 조금씩 넣어 간을 맞춥니다.',
-  ]],
+  null, // Merged into step 12.
   ['배추에 속을 넣고 보관하기', 545, [], [
     '안쪽 잎부터 한 장씩 들어 김칫소를 바르고, 흰 줄기 밑부분에 넉넉히 넣습니다.',
     '겉잎으로 감싸 김치통에 담고, 김장용 비닐을 윗면에 밀착시켜 공기 접촉을 줄입니다.',
@@ -91,16 +89,16 @@ const steps = [
     '쪽파는 흰 부분을 잘게, 초록 부분은 조금 길게 썹니다.',
   ]],
 ];
-steps.push(['찹쌀풀과 믹서 재료로 양념 만들기', null, [...blenderIngredients, 'pepper', 'salt'], [
+steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', null, [...blenderIngredients, 'pepper', ...optionalSeasoning], [
   '사과, 배, 다발무와 마늘을 잘게 썹니다. 멸치액젓을 부어 곱게 갑니다. 양이 많으면 여러 번 나누어 갑니다.',
   '완전히 식힌 찹쌀풀에 믹서로 갈아 둔 재료를 넣고 고루 섞습니다.',
   '계량한 고춧가루를 나누어 넣으면서 덩어리가 없도록 버무립니다.',
-  '간을 보고 심심하면 천일염을 조금씩 넣어 짭짤하게 맞춥니다. 뒤에서 액젓과 새우젓을 넣으므로 소금은 한꺼번에 넣지 말고 마지막에 배추와 함께 간을 한 번 더 봅니다.',
+  '양념을 절임배추 한 조각에 얹어 맛봅니다. 심심하면 천일염을 조금씩 넣어 섞고 다시 맛보며 짭짤하게 맞춥니다.',
 ]]);
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
   { tab: 'day-before', stepIds: [0, 1, 2, 10] },
-  { tab: 'day-of', stepIds: [3, 11, 12, 4, 6, 7, 8] },
+  { tab: 'day-of', stepIds: [3, 11, 12, 4, 6, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];
@@ -179,17 +177,16 @@ function renderStep() {
   const useDefaultSeasoning = recipeYear.value === 'current';
   const extraInstruction = useDefaultSeasoning && stepId === 6
     ? '생새우와 백설탕을 함께 넣어 버무립니다.'
-    : useDefaultSeasoning && stepId === 7
+    : useDefaultSeasoning && stepId === 12
       ? '미원은 조미료가 들어 있지 않은 새우젓을 쓰고 감칠맛을 더하고 싶을 때 넣습니다.'
       : '';
-  const instructionList = instructions.map((line, index) => {
-    const text = useDefaultSeasoning && stepId === 7 && index === 0
-      ? '김칫소는 소량을 덜어 생새우가 충분히 익도록 가열한 뒤 식혀, 절임배추와 함께 맛보고 천일염으로 간을 맞춥니다.'
-      : line;
+  const instructionList = instructions.map((text, index) => {
     return `<li>${checkItem(`${scope}:instruction:${index}`, text)}</li>`;
   }).join('') + (extraInstruction ? `<li>${checkItem(`${scope}:default-seasoning`, extraInstruction)}</li>` : '');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
-  const reminder = stepId === 0 ? '배추 상자를 뒤집는 경우 물이 빠질 수 있음, 박스 안 상태를 보고 뒤집을지 판단할 것' : undefined;
+  byId('step').classList.toggle('storage-step', stepId === 8);
+  const reminder = stepId === 0 ? '배추 상자를 뒤집는 경우 물이 빠질 수 있음, 박스 안 상태를 보고 뒤집을지 판단할 것'
+    : stepId === 8 ? '[중요] 배추는 잘린 단면이 위로 오도록 넣어야 함' : undefined;
   byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids, reminder)}${renderRows(ids, currentWeight(), scope)}<ol>${instructionList}</ol>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {
     const id = Number(button.dataset.stepId);

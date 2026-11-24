@@ -69,3 +69,4 @@ a{color:#823324;text-underline-offset:3px}
 .ingredient-heading{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .stock-reminder{font-size:.875rem;font-weight:700;color:#8e2b19}
 #step .ingredient-heading > .check-item{color:#000}
+.storage-step .stock-reminder{font-size:inherit}

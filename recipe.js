@@ -84,6 +84,7 @@ const steps = [
   null, // Merged into step 12.
   ['배추에 속을 넣고 보관하기', 545, [], [
     '안쪽 잎부터 한 장씩 들어 김칫소를 바르고, 흰 줄기 밑부분에 넉넉히 넣습니다.',
+    '청갓, 쪽파 넣고 버무리기',
     '겉잎으로 감싸 김치통에 담고, 김장용 비닐을 윗면에 밀착시켜 공기 접촉을 줄입니다.',
     '영상에서는 서늘한 곳에서 약 24시간 익힌 뒤 김치냉장고로 옮깁니다.',
   ]],
@@ -187,7 +188,8 @@ function renderStep() {
   const [title, seconds, ids, instructions] = steps[stepId];
   const scope = `cook:${stepId}`;
   const instructionList = instructions.map((text, index) => {
-    const key = stepId === 3 ? [0, 'season-after-draining', 1][index] : stepId === 12 ? [1, 2, 3, 'vegetables'][index] : index;
+    const keys = { 3: [0, 'season-after-draining', 1], 8: [0, 'mix-greens', 1, 2], 12: [1, 2, 3, 'vegetables'] };
+    const key = keys[stepId]?.[index] ?? index;
     return `<li>${checkItem(`${scope}:instruction:${key}`, text)}</li>`;
   }).join('');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;

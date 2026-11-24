@@ -102,9 +102,9 @@ const format = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
 const boxInput = byId('box-count');
 const recipeYear = byId('recipe-year');
 const recordedWeights = { 2026: ingredients.cabbage.amount };
-const kilogramsPerBox = 20;
+const kilogramsPerBox = 10;
 const checklistKey = 'kimchi-seoul-checklist-v1';
-const boxCountKey = 'kimchi-seoul-box-count-v1';
+const boxCountKey = 'kimchi-seoul-box-count-v2';
 const checkedItems = loadChecklist();
 let dayIndex = 0;
 let stepPosition = 0;
@@ -199,13 +199,13 @@ function renderAmounts() {
   boxInput.setAttribute('aria-invalid', !kg);
   byId('weight-status').textContent = kg
     ? `총 ${amountText(kg, 'kg')}`
-    : '0.01박스 이상 입력하세요';
+    : '1박스(10 kg) 이상 입력하세요';
   const historicalWeight = recordedWeights[recipeYear.value];
   byId('recipe-mode').textContent = historicalWeight
     ? `${recipeYear.value}년 실사용 기록 · 절임배추 ${historicalWeight} kg`
     : '현재 재료 · 상단 박스 수에 맞춰 환산';
   byId('shopping-list').innerHTML = groups.map(([title, ids]) =>
-    `<article><h3>${title}</h3>${renderRows(ids, historicalWeight ?? kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
+    `<article><h3>${title}</h3>${renderRows(ids, kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
   byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
     const instructions = index === 1 || index === 2 ? steps[index][3] : [];
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
@@ -255,7 +255,9 @@ document.addEventListener('click', ({ target }) => {
   if (target.closest('[data-greens-guide]')) byId('greens-guide').showModal();
 });
 try {
-  const savedBoxCount = localStorage.getItem(boxCountKey);
+  const previousCount = localStorage.getItem('kimchi-seoul-box-count-v1');
+  const savedBoxCount = localStorage.getItem(boxCountKey)
+    ?? (previousCount === null ? null : String(Number(previousCount) * 2));
   if (savedBoxCount !== null) {
     boxInput.value = savedBoxCount;
     if (!currentWeight()) boxInput.value = boxInput.defaultValue;
@@ -264,7 +266,8 @@ try {
   // Use the default count when storage is unavailable.
 }
 boxInput.addEventListener('input', () => {
-  if (currentWeight()) {
+  if (currentWeight() && recipeYear.value === 'current') {
+    currentBoxCount = boxInput.value;
     try {
       localStorage.setItem(boxCountKey, boxInput.value);
     } catch {
@@ -279,12 +282,10 @@ let currentBoxCount = boxInput.value;
 recipeYear.addEventListener('change', () => {
   const historicalWeight = recordedWeights[recipeYear.value];
   if (historicalWeight) {
-    if (!boxInput.readOnly) currentBoxCount = boxInput.value;
     boxInput.value = String(historicalWeight / kilogramsPerBox);
   } else {
     boxInput.value = currentBoxCount;
   }
-  boxInput.readOnly = Boolean(historicalWeight);
   renderAmounts();
 });
 renderAmounts();

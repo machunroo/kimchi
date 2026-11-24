@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리집 김장 | 김장 레시피</title>
 <link rel="stylesheet" href="./style.css?v=ingredients-2026">
-<script defer src="./recipe.js?v=year-boxes"></script>
+<script defer src="./recipe.js?v=ten-kg-boxes"></script>
 </head>
 <body>
 <main>
@@ -13,7 +13,7 @@
     <div><p class="brand">우리집 김장</p><h1>김장김치</h1><p>절임배추 박스 수를 입력하면 재료량이 자동으로 바뀝니다.</p></div>
     <div class="weight">
       <label for="box-count">절임배추</label>
-      <div class="input"><input id="box-count" type="number" min="0.01" step="any" value="1" aria-describedby="weight-status"><span>박스</span></div>
+      <div class="input"><input id="box-count" type="number" min="1" step="any" value="1" aria-describedby="weight-status"><span>박스</span></div>
       <small id="weight-status" aria-live="polite"></small>
     </div>
   </header>
@@ -31,7 +31,7 @@
   <section id="prep" aria-labelledby="prep-title" hidden>
     <div class="intro"><h2 id="prep-title" tabindex="-1">용도별 재료 준비</h2><p>황태 육수와 찹쌀풀, 채소와 양념을 용도별로 준비합니다.</p></div>
     <div id="ingredients" class="grid"></div>
-    <details><summary>계량과 환산 기준</summary><p>현재 재료는 2026년 80 kg 기록을 4로 나눈 20 kg 기준으로, 입력한 박스 수에 비례합니다. 2026년을 선택하면 실제 80 kg 분량을 표시합니다.</p></details>
+    <details><summary>계량과 환산 기준</summary><p>1박스는 10 kg입니다. 재료는 2026년 80 kg 기록을 기준으로 배추 무게에 비례해 계산합니다. 2026년을 선택하면 8박스에서 시작하며, 박스 수를 바꿔 환산할 수 있습니다.</p></details>
     <div class="actions"><button type="button" id="start">조리 시작</button></div>
   </section>
   <section id="cook" aria-labelledby="cook-title" hidden>

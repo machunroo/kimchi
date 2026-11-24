@@ -51,6 +51,12 @@ const shoppingGroups = groups.map(([title, ids]) => {
   if (title === '김칫소 양념') return [title, ids.filter(id => !moved.includes(id))];
   return [title, ids];
 });
+const ingredientSections = {
+  '찹쌀풀 재료': 'rice-paste',
+  '김칫소 채소': 'vegetables',
+  '김칫소 믹서기': 'blender',
+  '김칫소 양념': 'seasoning',
+};
 const videoUrl = 'https://www.youtube.com/watch?v=yCAmXF76lxs';
 const steps = [
   ['배추 상자 뒤집기', 18, ['cabbage'], [
@@ -97,10 +103,10 @@ const steps = [
   ]],
 ];
 steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', null, [...blenderIngredients, 'pepper', ...optionalSeasoning], [
-  '사과, 배, 다발무와 마늘을 잘게 썹니다. 멸치액젓을 부어 곱게 갑니다. 양이 많으면 여러 번 나누어 갑니다.',
-  '완전히 식힌 찹쌀풀에 믹서로 갈아 둔 재료를 넣고 고루 섞습니다.',
-  '계량한 고춧가루를 나누어 넣으면서 덩어리가 없도록 버무립니다.',
-  '양념을 절임배추 한 조각에 얹어 맛봅니다. 심심하면 천일염을 조금씩 넣어 섞고 다시 맛보며 짭짤하게 맞춥니다.',
+  '완전히 식힌 찹쌀풀과 믹서기에 간 김칫소 재료를 섞습니다.',
+  '1번에서 섞은 재료에 고춧가루를 넣고 버무립니다.',
+  '간을 보고 심심하면 천일염을 조금씩 넣어 짭짤하게 맞춥니다.',
+  '3번에서 간을 맞춘 양념에 김칫소 채소를 넣고 버무립니다.',
 ]]);
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
@@ -186,18 +192,17 @@ function renderStep() {
   const useDefaultSeasoning = recipeYear.value === 'current';
   const extraInstruction = useDefaultSeasoning && stepId === 6
     ? '생새우와 백설탕을 함께 넣어 버무립니다.'
-    : useDefaultSeasoning && stepId === 12
-      ? '미원은 조미료가 들어 있지 않은 새우젓을 쓰고 감칠맛을 더하고 싶을 때 넣습니다.'
-      : '';
+    : '';
   const instructionList = instructions.map((text, index) => {
-    const key = stepId === 3 ? [0, 'season-after-draining', 1][index] : index;
+    const key = stepId === 3 ? [0, 'season-after-draining', 1][index] : stepId === 12 ? [1, 2, 3, 'vegetables'][index] : index;
     return `<li>${checkItem(`${scope}:instruction:${key}`, text)}</li>`;
   }).join('') + (extraInstruction ? `<li>${checkItem(`${scope}:default-seasoning`, extraInstruction)}</li>` : '');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
   byId('step').classList.toggle('storage-step', stepId === 8);
   const reminder = stepId === 0 ? '배추 상자를 뒤집는 경우 물이 빠질 수 있음, 박스 안 상태를 보고 뒤집을지 판단할 것'
     : stepId === 8 ? '[중요] 배추는 잘린 단면이 위로 오도록 넣어야 함' : undefined;
-  byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids, reminder)}${renderRows(ids, currentWeight(), scope)}<section class="cooking-instructions" aria-labelledby="instructions-heading"><h4 id="instructions-heading">조리 순서</h4><ol>${instructionList}</ol></section>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
+  const links = stepId === 12 ? '<nav class="ingredient-links" aria-label="관련 재료">' + Object.entries(ingredientSections).map(([name, id]) => `<a href="#${id}" data-ingredient-link>${name}</a>`).join('') + '</nav>' : '';
+  byId('step').innerHTML = `${ingredientHeading(checkItem(`${scope}:done`, title), ids, reminder)}${links}${renderRows(ids, currentWeight(), scope)}<section class="cooking-instructions" aria-labelledby="instructions-heading"><h4 id="instructions-heading">조리 순서</h4><ol>${instructionList}</ol></section>${seconds === null ? '' : `<p><a href="${videoUrl}&amp;t=${seconds}s">영상에서 이 단계 보기</a></p>`}`;
   Array.from(byId('step-list').children).forEach(button => {
     const id = Number(button.dataset.stepId);
     button.hidden = !stepIds.includes(id);
@@ -235,7 +240,7 @@ function renderAmounts() {
     ? `${recipeYear.value}년 실사용 기록 · 절임배추 ${historicalWeight} kg`
     : '현재 재료 · 상단 박스 수에 맞춰 환산';
   byId('shopping-list').innerHTML = shoppingGroups.map(([title, ids]) =>
-    `<article>${ingredientHeading(title, ids)}${renderRows(ids, kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
+    `<article${ingredientSections[title] ? ` id="${ingredientSections[title]}" tabindex="-1"` : ''}>${ingredientHeading(title, ids)}${renderRows(ids, kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
   byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
     const instructions = index === 1 || index === 2 ? steps[index][3] : [];
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
@@ -257,6 +262,15 @@ cookingDays.forEach(({ tab, stepIds }, day) => {
   });
 });
 for (const [tab, panel] of sections) byId(tab).onclick = () => showSection(panel);
+byId('step').addEventListener('click', event => {
+  const link = event.target.closest('[data-ingredient-link]');
+  if (!link) return;
+  event.preventDefault();
+  showSection('shopping');
+  const section = byId(link.hash.slice(1));
+  section.focus({ preventScroll: true });
+  section.scrollIntoView({ block: 'start' });
+});
 document.addEventListener('change', ({ target }) => {
   const key = target.dataset?.check;
   if (!key) return;

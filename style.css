@@ -73,3 +73,4 @@ a{color:#823324;text-underline-offset:3px}
 .cooking-instructions{border-top:2px solid #dfcbbf;margin:20px 0 12px;padding-top:14px}
 .cooking-instructions h4{margin:0;font-size:1.1rem;color:#231b16}
 .cooking-instructions ol{margin:10px 0 0;padding-inline-start:1.65rem}
+.ingredient-links{display:flex;flex-wrap:wrap;gap:.5rem 1rem;margin:1rem 0}.ingredient-links a{color:#8e2b19;text-underline-offset:.2em}

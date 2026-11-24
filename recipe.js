@@ -266,11 +266,6 @@ function renderAmounts() {
   }
   byId('shopping-list').innerHTML = shoppingGroups.map(([title, ids]) =>
     `<article${ingredientSections[title] ? ` id="${ingredientSections[title]}" tabindex="-1"` : ''}>${ingredientHeading(title, ids)}${shoppingRows(title, ids)}</article>`).join('');
-  byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
-    const instructions = index === 1 || index === 2 ? steps[index][3] : [];
-    const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');
-    return `<article>${ingredientHeading(title, ids)}${renderRows(ids, kg, `prep:${index >= 3 ? index + 1 : index}`)}${list ? `<ol>${list}</ol>` : ''}</article>`;
-  }).join('');
   renderStep();
 }
 

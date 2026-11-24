@@ -62,6 +62,7 @@ const steps = [
   ]],
   ['절임배추 물 빼기', 224, ['cabbage'], [
     '채반에 배추를 뒤집어 놓고 1~2시간 물을 뺍니다.',
+    '물을 빼고 2~3시간 안에 양념을 버무립니다.',
     '헹굴 필요가 있으면 영상의 방법대로 소금물로 가볍게 헹군 뒤 물을 뺍니다.',
   ]],
   ['고춧가루 양념에 무채 버무리기', null, ['radish'], [
@@ -181,7 +182,8 @@ function renderStep() {
       ? '미원은 조미료가 들어 있지 않은 새우젓을 쓰고 감칠맛을 더하고 싶을 때 넣습니다.'
       : '';
   const instructionList = instructions.map((text, index) => {
-    return `<li>${checkItem(`${scope}:instruction:${index}`, text)}</li>`;
+    const key = stepId === 3 ? [0, 'season-after-draining', 1][index] : index;
+    return `<li>${checkItem(`${scope}:instruction:${key}`, text)}</li>`;
   }).join('') + (extraInstruction ? `<li>${checkItem(`${scope}:default-seasoning`, extraInstruction)}</li>` : '');
   byId('step-count').textContent = `${stepPosition + 1} / ${stepIds.length} 단계`;
   byId('step').classList.toggle('storage-step', stepId === 8);

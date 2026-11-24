@@ -35,7 +35,7 @@ const defaultSeasoning = {
 };
 const greensIngredients = ['greens', 'scallions'];
 const blenderIngredients = ['apple', 'pear', 'blendRadish', 'blendFish', 'blendGarlic'];
-const seasoning = ['pepper', 'fish', 'shrimp', 'fresh', 'garlic', 'ginger', 'sugar'];
+const seasoning = ['fish', 'shrimp', 'fresh', 'garlic', 'ginger', 'sugar'];
 const optionalSeasoning = ['salt', 'msg'];
 const groups = [
   ['절임배추', ['cabbage']],
@@ -43,7 +43,7 @@ const groups = [
   ['찹쌀풀 재료', ['riceFlour', 'stock']],
   ['김칫소 채소', ['radish', ...greensIngredients]],
   ['김칫소 믹서기', blenderIngredients],
-  ['김칫소 양념', [...seasoning, ...optionalSeasoning]],
+  ['김칫소 양념', ['pepper', ...seasoning, ...optionalSeasoning]],
 ];
 const videoUrl = 'https://www.youtube.com/watch?v=yCAmXF76lxs';
 const steps = [
@@ -63,16 +63,16 @@ const steps = [
     '채반에 배추를 뒤집어 놓고 1~2시간 물을 뺍니다.',
     '헹굴 필요가 있으면 영상의 방법대로 소금물로 가볍게 헹군 뒤 물을 뺍니다.',
   ]],
-  ['무채에 고춧가루 버무리기', 271, ['radish', 'pepper'], [
-    '채 썬 무에 고춧가루를 고루 버무린 뒤, 나머지 양념을 계량하는 동안 두어 색이 배게 합니다.',
+  ['무채에 만든 양념 버무리기', null, ['radish'], [
+    '찹쌀풀과 믹서 재료로 만든 고춧가루 양념에 채 썬 무를 넣고 고루 버무립니다.',
   ]],
   ['청갓·쪽파 썰기', 305, greensIngredients, [
     '미리 씻어 물기를 뺀 갓을 잘게 썹니다.',
     '쪽파는 흰 부분을 잘게, 초록 부분은 조금 길게 썹니다.',
   ]],
   ['김칫소 버무리기', null, seasoning, [
-    '고춧가루를 입힌 무채에 양념용 멸치액젓, 새우젓, 다진 마늘, 다진 생강을 넣어 섞습니다.',
-    '식힌 찹쌀풀과 갈아 둔 재료, 손질한 청갓·쪽파를 넣어 버무립니다.',
+    '양념에 버무린 무채에 양념용 멸치액젓, 새우젓, 다진 마늘, 다진 생강을 넣어 섞습니다.',
+    '손질한 청갓과 쪽파를 넣고 가볍게 버무립니다.',
   ]],
   ['천일염으로 간 조절하기', null, optionalSeasoning, [
     '절임배추와 김칫소를 함께 맛보고, 싱거우면 천일염을 조금씩 넣어 간을 맞춥니다.',
@@ -93,13 +93,16 @@ const steps = [
     '손질해 둔 김칫소용 무를 꺼내 가늘고 고르게 채 썹니다.',
   ]],
 ];
-steps.push(['김칫소 믹서기에 갈기', null, blenderIngredients, [
-  '믹서기에 사과, 배, 다발무, 마늘을 넣고 믹서용 멸치액젓을 부어 갈아 줍니다.',
+steps.push(['찹쌀풀과 믹서 재료로 양념 만들기', null, [...blenderIngredients, 'pepper', 'salt'], [
+  '사과, 배, 믹서용 다발무와 마늘을 잘게 썹니다. 믹서용 멸치액젓을 부어 곱게 갑니다. 양이 많으면 여러 번 나누어 갑니다.',
+  '완전히 식힌 찹쌀풀에 믹서로 갈아 둔 재료를 넣고 고루 섞습니다.',
+  '계량한 고춧가루를 나누어 넣으면서 덩어리가 없도록 버무립니다.',
+  '간을 보고 심심하면 천일염을 조금씩 넣어 짭짤하게 맞춥니다. 뒤에서 액젓과 새우젓을 넣으므로 소금은 한꺼번에 넣지 말고 마지막에 배추와 함께 간을 한 번 더 봅니다.',
 ]]);
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
   { tab: 'day-before', stepIds: [9, 1, 2, 10] },
-  { tab: 'day-of', stepIds: [0, 3, 11, 5, 4, 12, 6, 7, 8] },
+  { tab: 'day-of', stepIds: [0, 3, 11, 12, 5, 4, 6, 7, 8] },
 ];
 const byId = id => document.getElementById(id);
 const sections = [['ingredients-tab', 'shopping'], ['prep-tab', 'prep'], ['cook-tab', 'cook']];

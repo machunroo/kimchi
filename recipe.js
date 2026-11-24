@@ -52,6 +52,7 @@ const shoppingGroups = groups.map(([title, ids]) => {
 });
 const ingredientSections = {
   '찹쌀풀 재료': 'rice-paste',
+  '김칫소 채소': 'vegetables',
   '김칫소 믹서기': 'blender',
   '김칫소 양념': 'seasoning',
 };
@@ -101,10 +102,10 @@ const steps = [
   ]],
 ];
 steps.push(['찹쌀풀과 믹서 재료에 고춧가루 섞고 간 맞추기', null, [...blenderIngredients, 'pepper', ...optionalSeasoning], [
-  '완전히 식힌 찹쌀풀과 믹서기에 간 김칫소 재료를 섞습니다.',
-  '1번에서 섞은 재료에 고춧가루를 넣고 버무립니다.',
-  '간을 보고 심심하면 천일염을 조금씩 넣어 짭짤하게 맞춥니다.',
-  '3번에서 간을 맞춘 양념에 무채와 썰어 둔 청갓, 쪽파를 넣고 버무립니다.',
+  '[찹쌀풀 + 김칫소 믹서기]를 섞기',
+  '[1]에 고추가루 버무리기',
+  '간보고 심심한 경우 소금추가 ( 간은 짭짤하게 )',
+  '[3]에 김칫소 채소',
 ]]);
 // Keep step IDs stable so existing checklist entries stay with their original steps.
 const cookingDays = [
@@ -238,8 +239,15 @@ function renderAmounts() {
   byId('recipe-mode').textContent = historicalWeight
     ? `${recipeYear.value}년 실사용 기록 · 절임배추 ${historicalWeight} kg`
     : '현재 재료 · 상단 박스 수에 맞춰 환산';
+  const shoppingScope = historicalWeight ? 'history:' + recipeYear.value : 'shopping';
+  function shoppingRows(title, ids) {
+    if (title !== '김칫소 양념') return renderRows(ids, kg, shoppingScope);
+    const vegetables = ['radish', ...greensIngredients];
+    return `<section id="vegetables" tabindex="-1"><h4>김칫소 채소</h4>${renderRows(vegetables, kg, shoppingScope)}</section>` +
+      renderRows(ids.filter(id => !vegetables.includes(id)), kg, shoppingScope);
+  }
   byId('shopping-list').innerHTML = shoppingGroups.map(([title, ids]) =>
-    `<article${ingredientSections[title] ? ` id="${ingredientSections[title]}" tabindex="-1"` : ''}>${ingredientHeading(title, ids)}${renderRows(ids, kg, historicalWeight ? 'history:' + recipeYear.value : 'shopping')}</article>`).join('');
+    `<article${ingredientSections[title] ? ` id="${ingredientSections[title]}" tabindex="-1"` : ''}>${ingredientHeading(title, ids)}${shoppingRows(title, ids)}</article>`).join('');
   byId('ingredients').innerHTML = groups.map(([title, ids], index) => {
     const instructions = index === 1 || index === 2 ? steps[index][3] : [];
     const list = instructions.map((line, item) => `<li>${checkItem(`prep:${index}:instruction:${item}`, line)}</li>`).join('');

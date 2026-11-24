@@ -155,13 +155,15 @@ function renderRows(ids, kg, scope) {
     const item = (recipeYear.value === 'current' && defaultSeasoning[id]) || ingredients[id];
     const factor = kg / ingredients.cabbage.amount;
     const amount = item.note ?? (kg ? amountText(item.amount * factor, item.unit) : '—');
+    const isRadishCutting = scope === 'cook:11' && id === 'radish';
+    const quantity = isRadishCutting && kg ? `다발무 ${format.format(item.amount * factor)}개` : amount;
     const hints = [item.hint];
     if (kg && item.thin) hints.push(`가는 대파라면 ${amountText(item.thin * factor, '대')}`);
     if (kg && item.reduced) hints.push(`줄일 경우 약 ${amountText(item.reduced * factor, item.unit)}`);
     if (kg && item.bottles) hints.push(`1 L 제품 기준 ${amountText(item.bottles * factor, '병')}`);
-    const label = `${item.name}${hints.filter(Boolean).map(hint => `<small>${hint}</small>`).join('')}`;
+    const label = `${isRadishCutting ? '무채썰기' : item.name}${hints.filter(Boolean).map(hint => `<small>${hint}</small>`).join('')}`;
     const guide = id === 'greens' ? '<button type="button" class="guide-button" data-greens-guide aria-haspopup="dialog" aria-controls="greens-guide">청갓·홍갓 설명</button>' : '';
-    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}${guide}</dt><dd>${amount}</dd></div>`;
+    return `<div class="row"><dt>${checkItem(`${scope}:${id}`, label)}${guide}</dt><dd>${quantity}</dd></div>`;
   }).join('') + '</dl>';
 }
 
